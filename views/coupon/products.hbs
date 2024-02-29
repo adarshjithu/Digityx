@@ -297,7 +297,7 @@
          </header>
 
          <script>
-         fetch('http://localhost:3000/cart/cartcount').then((res)=>{
+         fetch('http://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             if(data.count==undefined){
@@ -316,7 +316,7 @@
          })
 
 
-         fetch('http://localhost:3000/profile/profile-icon').then((res)=>{
+         fetch('http://digityx.shop/profile/profile-icon').then((res)=>{
             return res.json()
          }).then((data)=>{
            if(data.success == true){
@@ -336,7 +336,7 @@
 
            //wishlist
 
-               fetch('http://localhost:3000/products/wishlistcount').then((res)=>{
+               fetch('http://digityx.shop/products/wishlistcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             console.log(data)
@@ -743,7 +743,7 @@
  const user = document.getElementById('user').innerHTML
    
  
-  await fetch(`http://localhost:3000/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
+  await fetch(`http://digityx.shop/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
      return res.json()
   }).then((data)=>{
        document.querySelector(".badge").innerHTML=data.count;console.log(data)}).catch((error)=>{
@@ -756,7 +756,7 @@
 
 
    function wishlist(id){
-      fetch(`http://localhost:3000/products/add-to-wishlist?id=${id}`).then((data)=>{
+      fetch(`http://digityx.shop/products/add-to-wishlist?id=${id}`).then((data)=>{
          return data.json()
       }).then((result)=>{
          console.log(result.count)
@@ -862,7 +862,7 @@
 
 
               <script>
-                 fetch(`http://localhost:3000/products/totalProducts`).then((data)=>{
+                 fetch(`http://digityx.shop/products/totalProducts`).then((data)=>{
                   return data.json()
                  }).then((result)=>{
                   document.getElementById('loadedProducts').innerHTML=result.productCount
