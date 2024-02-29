@@ -674,7 +674,7 @@ const quantityError = document.getElementById('quantityError');
 function deleteImage(image,type){
 console.log(type)
 var proId = document.getElementById("productId").value;
-  fetch(`http://localhost:3000/products/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
+  fetch(`http://digityx.shopproducts/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
    return data.json()
   }).then((result)=>{
     location.reload()

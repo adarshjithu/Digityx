@@ -213,7 +213,7 @@
 
    
  
- fetch(`http://localhost:3000/cart/addtocart?proId=${name}`).then(function(res){
+ fetch(`http://digityx.shop/cart/addtocart?proId=${name}`).then(function(res){
      return res.json()
   }).then((data)=>{
        document.querySelector(".badge").innerHTML=data.count;
@@ -235,7 +235,7 @@
 
 <script>
 
-        fetch('http://localhost:3000/products/wishlistcount').then((res)=>{
+        fetch('http://digityx.shop/products/wishlistcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             console.log(data)

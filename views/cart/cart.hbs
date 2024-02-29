@@ -240,7 +240,7 @@ background-color: #eae8e8;
          document.getElementById(`btn${proId}`).classList.remove("changeColor")
 
       await fetch(`http://digityx.shop/cart/changeQuantity?proId=${proId}&&count=${count}`).then(function(data){
-        fetch('http://localhost:3000/cart/cartcount').then((res)=>{
+        fetch('http://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             document.getElementById("items").innerHTML = data.count ;

@@ -553,7 +553,7 @@ download pdf format --}}
     document.getElementById('totalRevenueSpan').innerHTML = `${arg} Revenue`
     document.getElementById('totalSalesSpan').innerHTML = `${arg} Sales`
     document.getElementById('totalSalesMain').innerHTML = `${arg} Sales`
-    fetch(`http://localhost:3000/admin/changeSalesChart?id=${arg}`).then((e)=>{
+    fetch(`http://digityx.shop/admin/changeSalesChart?id=${arg}`).then((e)=>{
       return e.json();
     }).then((res)=>{
       console.log(res.users)
@@ -629,7 +629,7 @@ download pdf format --}}
 // Get the canvas element
 var radar = document.getElementById('radarChart').getContext('2d');
 var category;
-fetch('http://localhost:3000/admin/category-chart').then((data)=>{
+fetch('http://digityx.shop/admin/category-chart').then((data)=>{
   return data.json()
 }).then((result)=>{
 
