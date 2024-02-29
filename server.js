@@ -12,11 +12,7 @@ const orderRoter = require('./routes/order');
 const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '8');
 
-    next();
-  });
 const cors = require('cors')
 app.use(cors());
   
