@@ -12,6 +12,12 @@ const orderRoter = require('./routes/order');
 const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://digityx.shop');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+  });
 const cors = require('cors')
 app.use(cors({
     origin: 'http://digityx.shop',
@@ -59,7 +65,7 @@ app.all('*',(req,res)=>{
 app.use((error,req,res,next)=>{
     console.log(error)
     if(error.statusCode==400){
-        res.send("400")
+        res.render("error/400")
     }
     else{res.render("error/500")
     }
