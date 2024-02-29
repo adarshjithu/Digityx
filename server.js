@@ -14,8 +14,11 @@ const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
 const cors = require('cors')
 app.use(cors({
-    origin:'http://16.171.7.185'
-}))
+    origin: 'http://digityx.shop',
+    credentials: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  }));
+  
 
 const path = require("path")
 const nocache = require('nocache')
