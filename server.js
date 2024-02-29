@@ -13,7 +13,9 @@ const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
 const cors = require('cors')
-app.use(cors())
+app.use(cors({
+    origin:'http://16.171.7.185'
+}))
 
 const path = require("path")
 const nocache = require('nocache')

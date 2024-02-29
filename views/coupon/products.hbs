@@ -743,7 +743,7 @@
  const user = document.getElementById('user').innerHTML
    
  
-  await fetch(`http://localhost:3000/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
+  await fetch(`http://16.171.7.185/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
      return res.json()
   }).then((data)=>{
        document.querySelector(".badge").innerHTML=data.count;console.log(data)}).catch((error)=>{
