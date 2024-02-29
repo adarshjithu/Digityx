@@ -12,6 +12,8 @@ const orderRoter = require('./routes/order');
 const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
+const cors = require('cors');
+app.use(cors())
 const corsOpt = {
     origin:'*',
     methods:[
@@ -22,7 +24,6 @@ const corsOpt = {
         'Content-Type',
     ],
 }
-const cors = require('cors');
 app.use(cors(corsOpt));
   
 
