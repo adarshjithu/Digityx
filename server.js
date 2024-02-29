@@ -13,28 +13,13 @@ const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
 const cors = require('cors');
-// app.use(cors())
-// const corsOpt = {
-//     origin:'*',
-//     methods:[
-//         'GET',
-//         'POST'
-//     ],
-//     allowedHeaders:[
-//         'Content-Type',
-//     ],
-// }
-// app.use(cors(corsOpt));
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); // or specify your specific origin
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-   
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-    next();
+app.options("/", (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.sendStatus(204);
   });
-  
+
 
 const path = require("path")
 const nocache = require('nocache')
