@@ -13,18 +13,27 @@ const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
 const cors = require('cors');
-app.use(cors())
-const corsOpt = {
-    origin:'*',
-    methods:[
-        'GET',
-        'POST'
-    ],
-    allowedHeaders:[
-        'Content-Type',
-    ],
-}
-app.use(cors(corsOpt));
+// app.use(cors())
+// const corsOpt = {
+//     origin:'*',
+//     methods:[
+//         'GET',
+//         'POST'
+//     ],
+//     allowedHeaders:[
+//         'Content-Type',
+//     ],
+// }
+// app.use(cors(corsOpt));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // or specify your specific origin
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+   
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    next();
+  });
   
 
 const path = require("path")
