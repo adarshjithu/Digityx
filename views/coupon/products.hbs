@@ -746,9 +746,9 @@
   await fetch(`http://localhost:3000/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
      return res.json()
   }).then((data)=>{
-       document.querySelector(".badge").innerHTML=data.count;
-       console.log(data)
-  })
+       document.querySelector(".badge").innerHTML=data.count;console.log(data)}).catch((error)=>{
+         console.log(error)
+       })
      
    }
 
