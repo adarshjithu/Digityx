@@ -13,13 +13,7 @@ const couponRouter = require("./routes/coupon");
 const offerRouter = require("./routes/offer");
 const otpRouter = require("./routes/otp")
 const cors = require('cors');
-
-app.options("/", (req, res) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.sendStatus(204);
-  });
+app.use(cors())
 
 
 const path = require("path")
