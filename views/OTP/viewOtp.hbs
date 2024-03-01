@@ -58,7 +58,7 @@ document.getElementById("timer").innerHTML = '0'
              //timer morethan zero
              else{
                 //sending otp and its position for checking otp
-            fetch(`http://digityx.shop/user/otp/verifyOtp?position=${position}&&otp=${otp}`).then((data)=>{
+            fetch(`https://digityx.shop/user/otp/verifyOtp?position=${position}&&otp=${otp}`).then((data)=>{
         return data.json()
     }).then((result)=>{
         //check result of otp
@@ -86,7 +86,7 @@ function resendOtp(){
      let timer = document.getElementById('timer').innerHTML;
      if(timer<=0){
         
-fetch(`http://digityx.shop/user/otp/resend?position=${position}`).then((data)=>{
+fetch(`https://digityx.shop/user/otp/resend?position=${position}`).then((data)=>{
     return data.json()
 }).then((result)=>{
     location.reload()

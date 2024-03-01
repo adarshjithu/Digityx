@@ -403,7 +403,7 @@
 
 
 <script>
-     fetch('http://digityx.shop/cart/cartcount').then((res)=>{
+     fetch('https://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             {{!-- document.getElementById("items").innerHTML = data.count ; --}}
@@ -461,7 +461,7 @@ if(onlinepayment){
 
 function change(e){
  const value = document.getElementById("add").value
-  fetch(`http://digityx.shop/cart/checkout-change-address?type=${value}`).then((res)=>{
+  fetch(`https://digityx.shop/cart/checkout-change-address?type=${value}`).then((res)=>{
     return res.json()
   }).then((data)=>{
     location.reload()
@@ -498,7 +498,7 @@ document.getElementById("coupon").value=discountPrice
           document.getElementById(`${couponId}`).style.display='none'
        
          
-      fetch(`http://digityx.shop/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`)
+      fetch(`https://digityx.shop/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`)
   
     
     
@@ -675,7 +675,7 @@ document.getElementById("coupon").value=discountPrice
  var user =document.querySelector(".userId").innerHTML;
  console.log(user)
 
- fetch(`http://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
+ fetch(`https://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
   return data.json()
  })
 .then((res)=>{
@@ -706,7 +706,7 @@ document.getElementById("coupon").value=discountPrice
       const total = document.getElementById("total").innerHTML;
       console.log(total)
     const id   = document.getElementById("referalcode").value;
-     fetch(`http://digityx.shop/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
+     fetch(`https://digityx.shop/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
       return result.json()
      }).then((data)=>{
       console.log(data)

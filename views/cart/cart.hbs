@@ -239,8 +239,8 @@ background-color: #eae8e8;
        else{
          document.getElementById(`btn${proId}`).classList.remove("changeColor")
 
-      await fetch(`http://digityx.shop/cart/changeQuantity?proId=${proId}&&count=${count}`).then(function(data){
-        fetch('http://digityx.shop/cart/cartcount').then((res)=>{
+      await fetch(`https://digityx.shop/cart/changeQuantity?proId=${proId}&&count=${count}`).then(function(data){
+        fetch('https://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             document.getElementById("items").innerHTML = data.count ;
@@ -271,7 +271,7 @@ background-color: #eae8e8;
 
 
 
- fetch('http://digityx.shop/cart/cartcount').then((res)=>{
+ fetch('https://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             document.getElementById("items").innerHTML = data.count ;
