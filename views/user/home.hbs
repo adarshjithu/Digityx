@@ -341,8 +341,26 @@
          #newest{
             font-size: 45px;
          }
+         .newAr{
+            font-size: 20px;
+         }
+           #newArrivalImg{
+             
+            }
          
          @media only screen and (max-width: 600px) {
+            #new{
+               display: flex;
+               flex-direction: column;
+               justify-content: center;
+               align-items: center;
+            }
+             #newArrivalImg{
+               flex-direction: column;
+            }
+            .newAr{
+               font-size: 12px;
+            }
             .name{
                font-size: 12px;
             }
@@ -364,6 +382,15 @@
 }
 }
          @media only screen and (max-width: 450px) {
+                #new{
+               display: flex;
+               flex-direction: column;
+               justify-content: center;
+               align-items: center;
+            }
+            #newArrivalImg{
+               flex-direction: column;
+            }
 .categoryImage{
    width: 50px;
    height: 50px;
@@ -401,7 +428,7 @@
                                     <br>
                                     On Everything
                                  </h1>
-                                 <p>
+                                 <p style="visibility: hidden;">
                                     Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
                                  </p>
                                  <div class="btn-box">
@@ -427,7 +454,7 @@
                                     On Everything
                                  </h1>
                                  <p>
-                                    Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
+                                   
                                  </p>
                                  <div class="btn-box">
                                     <a href="" class="btn1">
@@ -452,7 +479,7 @@
                                     On Everything
                                  </h1>
                                  <p>
-                                    Explicabo esse amet tempora quibusdam laudantium, laborum eaque magnam fugiat hic? Esse dicta aliquid error repudiandae earum suscipit fugiat molestias, veniam, vel architecto veritatis delectus repellat modi impedit sequi.
+                                   
                                  </p>
                                  <div class="btn-box">
                                     <a href="" class="btn1">
@@ -542,18 +569,18 @@
       <!-- arrival section -->
       <section class="arrival_section" style="background-color: #DEE2E5;">
          <div class="">
-            <div class="box" style="display: flex;justify-content: space-around;">
+            <div class="box" style="display: flex;justify-content: space-around;align-items: center;" id="newArrivalImg">
                <div class=""  style="height: 100%;width: 50%;">
                   <img src="/assets/products/{{newArrival.image}}" style="height: 100%;width: 100%;">
                </div>
                <div class="row">
-                  <div class="col-md-6 ml-auto">
+                  <div class="col-md-6 ml-auto" id="new">
                      <div class="heading_container remove_line_bt">
-                        <h2>
+                        <h2 class="">
                            #NewArrivals
                         </h2>
                      </div>
-                     <p style="margin-top: 20px;margin-bottom: 30px;font-weight: 600;color: black;">
+                     <p style="margin-top: 20px;margin-bottom: 30px;font-weight: 600;color: black;"  class="newAr">
                       {{newArrival.description}}
                      </p>
                      <a href="/user-product-details?id={{newArrival._id}}" style="background-color: red;">

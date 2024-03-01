@@ -1057,6 +1057,7 @@ const salesReport = asyncHandler(async (req, res) => {
      }
      totalSales = total[0].total; //total sales
      //type of sales
+     console.log(totalSales)
 
      res.render("admin/salesReport", { order, totalSales, type, date, saleType });
 });
@@ -1215,6 +1216,7 @@ const monthlySales = asyncHandler(async (req, res) => {
      ]);
 
      let totalSales = total[0].total; //finding total sales
+     console.log(totalSales)
 
      res.render("admin/salesReport", { order, totalSales, type, saleType });
 });
