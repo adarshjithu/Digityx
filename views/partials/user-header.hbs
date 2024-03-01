@@ -213,7 +213,7 @@
          <script>
 
             
-         fetch('http://digityx.shop/cart/cartcount').then((res)=>{
+         fetch('https://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
            if(data.count==undefined){
@@ -228,7 +228,7 @@
             
 
 
-         fetch('http://digityx.shop/profile/profile-icon').then((res)=>{
+         fetch('https://digityx.shop/profile/profile-icon').then((res)=>{
             return res.json()
          }).then((data)=>{
           
@@ -245,7 +245,7 @@
          })
        //wishlist
 
-               fetch('http://digityx.shop/products/wishlistcount').then((res)=>{
+               fetch('https://digityx.shop/products/wishlistcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             console.log(data)
