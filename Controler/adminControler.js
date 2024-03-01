@@ -1169,7 +1169,7 @@ const monthlySales = asyncHandler(async (req, res) => {
      let startDate = new Date().toDateString(); //now date
 
      let end = endOfMonth.toDateString();
-     const type = `WEEKLY SALES REPORT (${startDate} to ${end})`; //type of sales
+     const type = `MONTHLY SALES REPORT (${startDate} to ${end})`; //type of sales
      let order = await orderCollection.aggregate([
           //finding all the order informations
           {
