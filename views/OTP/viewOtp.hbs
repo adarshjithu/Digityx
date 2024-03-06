@@ -26,7 +26,7 @@
           </div>
      </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
      console.log({{{date}}}) 
      const details = {{{date}}}
@@ -58,7 +58,7 @@ document.getElementById("timer").innerHTML = '0'
              //timer morethan zero
              else{
                 //sending otp and its position for checking otp
-            fetch(`https://digityx.shop//user/otp/verifyOtp?position=${position}&&otp=${otp}`).then((data)=>{
+            fetch(`https://digityx.shop/user/otp/verifyOtp?position=${position}&&otp=${otp}`).then((data)=>{
         return data.json()
     }).then((result)=>{
         //check result of otp
@@ -67,23 +67,11 @@ document.getElementById("timer").innerHTML = '0'
 
             if(result.user){
             location.href = '/user_signup',
-            Swal.fire({
-  position: "top",
-  icon: "success",
-  title: "Your work has been saved",
-  showConfirmButton: false,
-  timer: 1500
-});}
+            alert("accout created")}
             else{
 
                  location.href = '/user_home',
-            Swal.fire({
-  position: "top",
-  icon: "success",
-  title: "Your work has been saved",
-  showConfirmButton: false,
-  timer: 1500
-});
+            alert("accout created")
  
             }
         }
