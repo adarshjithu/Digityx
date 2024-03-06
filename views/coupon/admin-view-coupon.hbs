@@ -558,7 +558,7 @@ margin: 20px;
 
 function changeCouponStatus(id){
  const button = document.getElementById(id).innerHTML
-   fetch(`http://localhost:3000/coupon/changeCouponStatus?id=${id}`).then((data)=>{
+   fetch(`https://digityx.shop/coupon/changeCouponStatus?id=${id}`).then((data)=>{
     return data.json()
   }).then(()=>{
  if(button == 'Disabled'){
@@ -581,7 +581,7 @@ const code =  'DIGITYX'+random
 
 function editCoupon(id){
 console.log(id)
-fetch(`http://localhost:3000/coupon/editCoupon?id=${id}`).then((data)=>{
+fetch(`https://digityx.shop/coupon/editCoupon?id=${id}`).then((data)=>{
   return data.json()
 })
 .then((result)=>{

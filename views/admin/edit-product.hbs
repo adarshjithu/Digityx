@@ -732,7 +732,7 @@ function deleteImage(image,type){
 var proId = document.getElementById("productId").value;
   console.log(image,type,pro')
 
-  fetch(`http://localhost:3000/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
+  fetch(`https://digityx.shop/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
    return data.json()
   }).then((result)=>{
     location.reload()

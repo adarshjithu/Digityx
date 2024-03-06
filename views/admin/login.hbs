@@ -181,7 +181,7 @@ document.getElementById('adminForm').addEventListener('submit',(e)=>{
 
   let email = document.getElementById('email').value; 
   let password = document.getElementById('password').value; 
-  fetch(`http://localhost:3000/admin/logins?email=${email}&&password=${password}`).then((res)=>{
+  fetch(`https://digityx.shop/admin/logins?email=${email}&&password=${password}`).then((res)=>{
     return res.json()
   }).then((data)=>{
 

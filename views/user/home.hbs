@@ -646,7 +646,7 @@
 
       <script>
             function wishlist(id){
-      fetch(`http://localhost:3000/products/add-to-wishlist?id=${id}`).then((data)=>{
+      fetch(`https://digityx.shop/products/add-to-wishlist?id=${id}`).then((data)=>{
          return data.json()
       }).then((result)=>{
          console.log(result.count)
@@ -660,7 +660,7 @@
 
    
  
-  await fetch(`http://localhost:3000/cart/addtocart?proId=${arg}`).then(function(res){
+  await fetch(`https://digityx.shop/cart/addtocart?proId=${arg}`).then(function(res){
      return res.json()
   }).then((data)=>{
        document.querySelector(".badge").innerHTML=data.count;
