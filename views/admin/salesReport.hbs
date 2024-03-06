@@ -319,7 +319,8 @@ margin: 20px;
        <h5 style="color: black;margin-right: 20px;">Grand Total : {{totalSales}}</h5>
     </div>
  <div class="" style="width: 100%;margin-top: 20px;background-color: ;height: 50px;border-radius: 5px;display: flex;justify-content: flex-end;align-items: center;">
-         <a href="/admin/downloadSalesReportPdf?saleType={{saleType}}" class="btn" style="background-color: red;color: white;margin-right: 20px;">Download PDF</a>
+         <a href="/admin/downloadSalesReportPdf?saleType={{saleType}}" class="btn" style="background-color: red;color: white;margin-right: 20px;">Download Csv</a>
+         <a href="/admin/downloadSalesReportCsv?saleType={{saleType}}" class="btn" style="background-color: red;color: white;margin-right: 20px;">Download Pdf</a>
     </div>
 
    
@@ -350,6 +351,17 @@ margin: 20px;
 
   function customSalesReport(){
     document.getElementById('customSalesReport').classList.toggle('customSalesReportHide')
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  let error = {{{error}}}
+
+  console.log(error)
+  if(error=='true'){
+
+    
+    Swal.fire("Date Validation Error");
   }
 </script>
 </html>

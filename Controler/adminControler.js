@@ -1,4 +1,4 @@
-const { createAdmin } = require("../middlewares/middleware");
+const { createAdmin, download } = require("../middlewares/middleware");
 const asyncHandler = require("express-async-handler");
 const UserCollection = require("../models/userModel");
 const Admin = require("../models/adminModel");
@@ -13,6 +13,7 @@ const offerCollection = require("../models/offerModel");
 const bannerCollection = require("../models/bannerModel");
 const paymentCollection = require("../models/paymentModel");
 const userCollection = require("../models/userModel");
+const cartCollection = require("../models/cartModel")
 const { convertArrayToCSV } = require("convert-array-to-csv");
 const { report } = require("../report");
 
@@ -273,14 +274,14 @@ const adminLogin = asyncHandler((req, res) => {
 
 const adminLoginPost = asyncHandler(async (req, res) => {
      try {
-          const admin = await Admin.findOne({ email: req.body.email });
-          if (admin && (await admin.isPasswordMatched(req.body.password))) {
+          const admin = await Admin.findOne({ email: req.query.email });
+          if (admin && (await admin.isPasswordMatched(req.query.password))) {
                req.session.admin = admin;
 
                req.session.admin.name = req.session.admin.name.charAt(0).toUpperCase() + req.session.admin.name.slice(1);
-               res.redirect("/admin");
+               res.json({success:true});
           } else {
-               res.render("admin/login", { error: true });
+               res.json({success:false});
           }
      } catch (error) {
           throw new Error(error.message);
@@ -410,7 +411,18 @@ const adminAddProduct = asyncHandler(async (req, res) => {
 });
 // -------------------------------------admin addproduct post-------------------------------
 const adminAddProductPost = asyncHandler(async (req, res) => {
-     console.log(req.body);
+    
+     let images = req.files.map((e)=>{
+           return e.filename;
+     })
+
+     let IMG = images[0];
+     subIMG=[];
+    if(images.length>0){
+       images.shift()
+       subIMG=[...images]
+    }
+     console.log(images)
      //converting seasonal offer discount into Number from string
      req.body.offerDiscount = parseInt(req.body.offerDiscount);
      req.body.discount = parseInt(req.body.discount);
@@ -423,12 +435,7 @@ const adminAddProductPost = asyncHandler(async (req, res) => {
      const discountedPrice = req.body.price - totalDiscount;
 
      try {
-          let filename;
-          if (req.file.filename) {
-               filename = req.file.filename;
-          } else {
-               filename = "";
-          }
+          
 
           const productsObj = {
                name: req.body.name,
@@ -438,11 +445,12 @@ const adminAddProductPost = asyncHandler(async (req, res) => {
                status: req.body.status,
                quantity: req.body.quantity,
                category: req.body.category,
-               image: filename,
+               image: IMG,
                offerDiscount: req.body.offerDiscount,
                offerType: req.body.offerType,
                discountedPrice: discountedPrice,
                totalDiscount: totalDiscount,
+               subImage:images
           };
 
           console.log(productsObj);
@@ -464,6 +472,12 @@ const adminAddProductPost = asyncHandler(async (req, res) => {
 
 const adminDeleteProduct = asyncHandler(async (req, res) => {
      try {
+
+          await cartCollection.updateMany({},{
+               $pull:{
+                    products:{item:req.params.id}
+               }
+          })
           console.log(req.params.id);
           await productCollection.findOneAndDelete({ _id: req.params.id });
           res.redirect("/admin/view_products");
@@ -552,7 +566,7 @@ const changeImage = asyncHandler(async (req, res) => {
                res.redirect("/admin/view_products");
           }
      } catch (error) {
-          console.log(error.message);
+          console.log(error);
 
           var err = new Error();
           error.statusCode = 500;
@@ -599,22 +613,7 @@ const adminAddCategoryPost = asyncHandler(async (req, res) => {
 // ----------------------------------------admin view category---------------------------
 const adminViewCategory = asyncHandler(async (req, res) => {
      try {
-          const data = await categoryCollection.aggregate([
-               {
-                    $lookup: {
-                         from: "products",
-                         localField: "category",
-                         foreignField: "category",
-                         as: "cat",
-                    },
-               },
-               {
-                    $addFields: {
-                         stock: { $size: "$cat" },
-                    },
-               },
-               { $sort: { addedAt: 1 } },
-          ]);
+          const data = await categoryCollection.find().sort({_id:-1}).lean();
 
           res.render("admin/view-category", { data });
      } catch (error) {
@@ -878,34 +877,9 @@ const adminChangeGraph = asyncHandler(async (req, res) => {
 
 const transaction = asyncHandler(async (req, res) => {
      try {
-          const payments = await paymentCollection.aggregate([
-               { $match: {} },
-               {
-                    $lookup: {
-                         from: "orders",
-                         let: { orderDetails: { $toObjectId: "$orderDetails" } },
-                         pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$orderDetails"] } } }],
-                         as: "Payments",
-                    },
-               },
-               {
-                    $project: {
-                         order: 1,
-                         type: 1,
-                         payments: { $arrayElemAt: ["$Payments", 0] },
-                    },
-               },
-               {
-                    $project: {
-                         order: 1,
-                         type: 1,
-                         payments: 1,
-                         total: "$payments.total",
-                    },
-               },
-          ]);
+          const payments = await orderCollection.find({}).lean();
 
-          console.log(payments);
+         
 
           res.render("admin/trasaction", { payments });
      } catch (error) {
@@ -1034,6 +1008,7 @@ const downloadSalesReportControler = asyncHandler(async (req, res) => {
 });
 
 const salesReport = asyncHandler(async (req, res) => {
+     let error = JSON.stringify(req.query.error)
      let saleType = "Daily";
 
      const type = `DAILY SALES REPORT (${new Date().toDateString()})`; //type
@@ -1059,7 +1034,7 @@ const salesReport = asyncHandler(async (req, res) => {
      //type of sales
      console.log(totalSales)
 
-     res.render("admin/salesReport", { order, totalSales, type, date, saleType });
+     res.render("admin/salesReport", { order, totalSales, type, date, saleType,error });
 });
 //----------------------------------------Daily Sales Report -------------------------------
 
@@ -1226,6 +1201,16 @@ const monthlySales = asyncHandler(async (req, res) => {
 const customSalesReport = asyncHandler(async (req, res) => {
      let startDate = new Date(req.body.startDate); //start date
      let endDate = new Date(req.body.endDate);
+     let now = new Date()
+     req.session.startDate=startDate;
+     req.session.endDate=endDate
+
+     if(startDate>endDate){
+          res.redirect("/admin/salesReport?error=true")
+     }
+     else if(startDate>now||endDate>now){
+          res.redirect("/admin/salesReport?error=true")
+     }
      let saleType = "Custom";
      let type = `CUSTOM SALES REPORT (${new Date(startDate).toDateString()}to ${new Date(endDate).toDateString()})`;
      let order = await orderCollection.aggregate([
@@ -1269,10 +1254,12 @@ const customSalesReport = asyncHandler(async (req, res) => {
                     total: {
                          $sum: "$total",
                     },
+                    
                },
           },
      ]);
 
+     
      let totalSales = total[0].total; //finding total sales      //enddate
 
      res.render("admin/salesReport", { totalSales, type, order, saleType }); //page rendering
@@ -1329,7 +1316,7 @@ const reports = async(allData,total)=>{
  
  //-----------------------------------download sales report-------------------------------
 const downloadSalesReportPdf = asyncHandler(async (req, res) => {
-     console.log(req.query)
+    console.log(req.query)
 
      if(req.query.saleType == 'Daily'){       //dailysales
 
@@ -1349,28 +1336,11 @@ const downloadSalesReportPdf = asyncHandler(async (req, res) => {
                 ,
                 {
                      $project: {
-                          orderId: 1,
-                          productsCount: 1,
-                          orderedAt: 1,
-                          total: 1,
-                          status: 1,
-                          payment: 1,
-                          customer: "$address.firstname",
+                       products:0,
+                       address:0
                      },
                 },
-                {
-                     $project: {
-                          _id: 0,
-                          orderId:1,
-                          productsCount: 1,
-                          date: "$orderedAt",
-                          total: "$total",
-                          status: "$status",
-                          paymentType: "$payment",
-                       
-                          customer:1
-                     },
-                },
+               
            ]);
       
           let total = await orderCollection.aggregate([{$match:{orderedAt:today}},{
@@ -1381,16 +1351,365 @@ const downloadSalesReportPdf = asyncHandler(async (req, res) => {
                     }
                }
           }])
-          console.log(total)
+         
       
-     
-      reports(allData,total).then(()=>{
-
-           res.download('document.pdf')
-      })
+     download(allData,res);
+  
      }
+////weeekly
+     else if(req.query.saleType=='Weekly'){
+          var startOfWeek = new Date();
+     var startOfWeek = new Date(); //startdate of current week
+     startOfWeek.setHours(0, 0, 0, 0);
+     startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+     let startDate = new Date().toDateString();
+     let saleType = "Weekly";
+     var endOfWeek = new Date(); //end of the week
+     endOfWeek.setHours(23, 59, 59, 999);
+     endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
+     let end = endOfWeek.toDateString();
+  
+
+     let order = await orderCollection.aggregate([
+          //finding all the order informations
+          {
+               $addFields: {
+                    createdAt: {
+                         $toDate: "$orderedAt",
+                    },
+               },
+          },
+          {
+               $match: {
+                    createdAt: {
+                         $gte: startOfWeek,
+                         $lte: endOfWeek,
+                    },
+               },
+          },
+     ]);
+     download(order,res)
+     }
+
+
+     //monthly
+
+    else if(req.query.saleType=='Monthly'){
+     var startOfMonth = new Date();
+     var startOfMonth = new Date(); //month start Date
+     startOfMonth.setHours(0, 0, 0, 0);
+     startOfMonth.setDate(1);
+     let saleType = "Monthly";
+     var endOfMonth = new Date(); //Month end date
+     endOfMonth.setHours(23, 59, 59, 999);
+     endOfMonth.setMonth(endOfMonth.getMonth() + 1, 0);
+
+     let startDate = new Date().toDateString(); //now date
+
+     let end = endOfMonth.toDateString();
+     const type = `MONTHLY SALES REPORT (${startDate} to ${end})`; //type of sales
+     let order = await orderCollection.aggregate([
+          //finding all the order informations
+          {
+               $addFields: {
+                    createdAt: {
+                         $toDate: "$orderedAt",
+                    },
+               },
+          },
+          {
+               $match: {
+                    createdAt: {
+                         $gte: startOfMonth,
+                         $lte: endOfMonth,
+                    },
+               },
+          },
+     ]);
+     download(order,res)}
+
+
+else if(req.query.saleType=='Custom'){
+     let startDate = new Date(req.session.startDate); //start date
+     let endDate = new Date(req.session.endDate);
+   
+     let saleType = "Custom";
+     let type = `CUSTOM SALES REPORT (${new Date(startDate).toDateString()}to ${new Date(endDate).toDateString()})`;
+     let order = await orderCollection.aggregate([
+          //finding all the order informations
+          {
+               $addFields: {
+                    createdAt: {
+                         $toDate: "$orderedAt",
+                    },
+               },
+          },
+          {
+               $match: {
+                    createdAt: {
+                         $gte: startDate,
+                         $lte: endDate,
+                    },
+               },
+          },
+     ]);
+     res.download(order,res)
+}
      
 });
+// ----------------------------------------download sales report csv-------------------------------
+
+const downloadSalesReportcsv= asyncHandler(async(req,res)=>{
+
+  //----------------------------daily----------------------------------------------
+    if (req.query.saleType=='Daily'){
+     let today = new Date().toDateString()
+     let allData = await orderCollection.aggregate([
+           //finding all the order informations
+           {
+           $match:{
+               orderedAt:today
+           }
+           },
+           {$addFields:{
+                orderId:{
+                     $toString:'$_id'
+                }
+           }}
+           ,
+           {
+                $project: {
+                  products:0,
+                  address:0
+                },
+           },
+          
+      ]);
+   
+   
+
+
+     
+     let table = []
+
+     for(let i of allData){
+          let row = [];
+
+          
+          row.push(i.payment);
+          row.push(i.total);
+          row.push(i.subtotal);
+          row.push(i.discount);
+          row.push(i.couponId);
+          row.push(i.productsCount);
+          row.push(i.status);
+          row.push(i.orderedAt);
+          table.push(row)
+     }
+
+     const { jsPDF } = require('jspdf')
+     require('jspdf-autotable')
+     
+     const doc = new jsPDF()
+     doc.autoTable({
+       head: [['Payment', 'Total', 'Sub', 'Dis','Coupon','Products','Status','Date']],
+       body:table,
+     })
+     doc.save('table.pdf')
+     console.log('./table.pdf generated')
+
+     res.download('table.pdf')
+}
+//----------------------------weekly----------------------------------------------
+     else if(req.query.saleType=='Weekly'){
+          var startOfWeek = new Date();
+          var startOfWeek = new Date(); //startdate of current week
+          startOfWeek.setHours(0, 0, 0, 0);
+          startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+          let startDate = new Date().toDateString();
+          let saleType = "Weekly";
+          var endOfWeek = new Date(); //end of the week
+          endOfWeek.setHours(23, 59, 59, 999);
+          endOfWeek.setDate(endOfWeek.getDate() + (6 - endOfWeek.getDay()));
+          let end = endOfWeek.toDateString();
+       
+     
+          let allData = await orderCollection.aggregate([
+               //finding all the order informations
+               {
+                    $addFields: {
+                         createdAt: {
+                              $toDate: "$orderedAt",
+                         },
+                    },
+               },
+               {
+                    $match: {
+                         createdAt: {
+                              $gte: startOfWeek,
+                              $lte: endOfWeek,
+                         },
+                    },
+               },
+          ]);
+
+
+
+          
+          let table = []
+
+          for(let i of allData){
+               let row = [];
+     
+               
+               row.push(i.payment);
+               row.push(i.total);
+               row.push(i.subtotal);
+               row.push(i.discount);
+               row.push(i.couponId);
+               row.push(i.productsCount);
+               row.push(i.status);
+               row.push(i.orderedAt);
+               table.push(row)
+          }
+     
+          const { jsPDF } = require('jspdf')
+          require('jspdf-autotable')
+          
+          const doc = new jsPDF()
+          doc.autoTable({
+            head: [['Payment', 'Total', 'Sub', 'Dis','Coupon','Products','Status','Date']],
+            body:table,
+          })
+          doc.save('table.pdf')
+          console.log('./table.pdf generated')
+     
+          res.download('table.pdf')
+
+     }
+
+     //-----------------------------------------monthlySales-----------------------------------
+
+     else if(req.query.saleType=='Monthly'){
+          var startOfMonth = new Date();
+          var startOfMonth = new Date(); //month start Date
+          startOfMonth.setHours(0, 0, 0, 0);
+          startOfMonth.setDate(1);
+          let saleType = "Monthly";
+          var endOfMonth = new Date(); //Month end date
+          endOfMonth.setHours(23, 59, 59, 999);
+          endOfMonth.setMonth(endOfMonth.getMonth() + 1, 0);
+     
+          let startDate = new Date().toDateString(); //now date
+     
+          let end = endOfMonth.toDateString();
+          const type = `MONTHLY SALES REPORT (${startDate} to ${end})`; //type of sales
+          let allData = await orderCollection.aggregate([
+               //finding all the order informations
+               {
+                    $addFields: {
+                         createdAt: {
+                              $toDate: "$orderedAt",
+                         },
+                    },
+               },
+               {
+                    $match: {
+                         createdAt: {
+                              $gte: startOfMonth,
+                              $lte: endOfMonth,
+                         },
+                    },
+               },
+          ]);
+
+          let table = []
+
+          for(let i of allData){
+               let row = [];
+     
+               
+               row.push(i.payment);
+               row.push(i.total);
+               row.push(i.subtotal);
+               row.push(i.discount);
+               row.push(i.couponId);
+               row.push(i.productsCount);
+               row.push(i.status);
+               row.push(i.orderedAt);
+               table.push(row)
+          }
+     
+          const { jsPDF } = require('jspdf')
+          require('jspdf-autotable')
+          
+          const doc = new jsPDF()
+          doc.autoTable({
+            head: [['Payment', 'Total', 'Sub', 'Dis','Coupon','Products','Status','Date']],
+            body:table,
+          })
+          doc.save('table.pdf')
+          console.log('./table.pdf generated')
+     
+          res.download('table.pdf')
+     }
+//cutom-------------------------------------------
+     else if(req.query.saleType=='Custom'){
+          let startDate = new Date(req.session.startDate); //start date
+          let endDate = new Date(req.session.endDate);
+        
+          let saleType = "Custom";
+          let type = `CUSTOM SALES REPORT (${new Date(startDate).toDateString()}to ${new Date(endDate).toDateString()})`;
+          let allData = await orderCollection.aggregate([
+               //finding all the order informations
+               {
+                    $addFields: {
+                         createdAt: {
+                              $toDate: "$orderedAt",
+                         },
+                    },
+               },
+               {
+                    $match: {
+                         createdAt: {
+                              $gte: startDate,
+                              $lte: endDate,
+                         },
+                    },
+               },
+          ]);
+          let table = []
+
+          for(let i of allData){
+               let row = [];
+     
+               
+               row.push(i.payment);
+               row.push(i.total);
+               row.push(i.subtotal);
+               row.push(i.discount);
+               row.push(i.couponId);
+               row.push(i.productsCount);
+               row.push(i.status);
+               row.push(i.orderedAt);
+               table.push(row)
+          }
+     
+          const { jsPDF } = require('jspdf')
+          require('jspdf-autotable')
+          
+          const doc = new jsPDF()
+          doc.autoTable({
+            head: [['Payment', 'Total', 'Sub', 'Dis','Coupon','Products','Status','Date']],
+            body:table,
+          })
+          doc.save('table.pdf')
+          console.log('./table.pdf generated')
+     
+          res.download('table.pdf')
+     }
+
+})
 module.exports = {
      adminHome,
      adminLogin,
@@ -1428,4 +1747,5 @@ module.exports = {
      monthlySales,
      customSalesReport,
      downloadSalesReportPdf,
+     downloadSalesReportcsv
 };

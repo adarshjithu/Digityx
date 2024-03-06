@@ -175,6 +175,7 @@ const createAdmin = async(user,e,pass)=>{
 //verify login
 
 const  verifyLogin =async(req,res,next)=>{
+     
      if(req.session.user){
           const user = await userCollection.findById({_id:req.session.user._id})
    
@@ -365,8 +366,70 @@ const createReferal =(email,code)=>{
 }
 
 
+//-------------------checkout product checking ----------------------------------------
+
+const checkoutProductChecking = async()=>{
+
+     return new Promise(async(resolve,reject)=>{
+
+                    const cartDetails = await cartCollection.aggregate([
+                         { $match: { user: req.session.user._id } },
+                         { $unwind: "$products" },
+                         {
+                              $project: {
+                                   item: "$products.item",
+                                   count: "$products.count",
+                              },
+                         },
+                         {
+                              $lookup: {
+                                   from: "products",
+                                   let: { item: { $toObjectId: "$item" } },
+                                   pipeline: [{ $match: { $expr: { $eq: ["$_id", "$$item"] } } }],
+                                   as: "cartData",
+                              },
+                         },
+                         {
+                              $project: {
+                                   item: "$item",
+                                   count: "$count",
+                                   product: { $arrayElemAt: ["$cartData", 0] },
+                              },
+                         },
+                         {
+                              $project: {
+                                   item: 1,
+                                   count: 1,
+                                   product: 1,
+                                   total: { $multiply: ["$count", "$product.price"] },
+                              },
+                         },
+                    ]);
+          console.log('cartDetails',cartDetails)
+     })
+
+}
+
+
+/////////////
+
+async function download(allData,res){
+     const fs = require("fs");
+     var information = allData;
+     const { Parser } = require("json2csv");
+     const json2csv = new Parser();
+     const csv = json2csv.parse(information);
+     fs.writeFile("csv.csv", csv, (err) => {
+          console.log(err);
+     });
+     res.attachment("csv.csv");
+     res.send(csv);
+     console.log(csv);
+     
+}
+
 
 
 module.exports = { validationRules, validationRes ,generateOTP,validationLoginRules,loginValidationRes,createAdmin,
 verifyLogin,verifyAdmin,adminLoginValidationRes,adminValidationLoginRules,
-resetPasswordValidationRules,resetPasswordValidationResult,cropImageMultiple,createReferal};
+resetPasswordValidationRules,resetPasswordValidationResult,cropImageMultiple,createReferal,checkoutProductChecking,download};

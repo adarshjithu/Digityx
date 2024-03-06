@@ -39,7 +39,7 @@
     align-items: center;
    }
    ul li:hover{
-    background-color:blue;
+    background-color:red;
     color:#fff;
    }
    ul li a:hover{
@@ -85,10 +85,16 @@ input[type=submit]:hover {
 .displaytoggle{
     display: none;
 }
+input{
+  box-shadow: 1px 1px 1px black;
+}
 /* Add a background color and some padding around the form */
 
 
    @media only screen and  (max-width:750px){
+    .add{
+    flex-direction: column;
+    }
     ul li a span{
         display:none;
     }
@@ -173,17 +179,17 @@ input[type=submit]:hover {
           
     <form  action="/profile/edit-address?id={{address._id}}" style="width: 75%;"  id="shippingform" method="post">
     {{!-- firstname lastname --}}
-    <div style="display: flex;justify-content: space-between;">
+    <div class="add" style="display: flex;justify-content: space-between;">
      <div>
       <label for="fname">First Name</label>
-       <input type="text" id="firstname" name="firstname" value="{{address.firstname}}">
-       <span id="firstnameerror" class="text-danger"></span>
+       <input  type="text" id="firstname" name="firstname" value="{{address.firstname}}">
+       <span id="firstnameErr" class="text-danger"></span>
      </div>
      <div>
 
        <label for="lname">Last Name</label>
        <input type="text" id="lastname" name="lastname" value="{{address.lastname}}" >
-        <span id="lastnameerror" class="text-danger"></span>
+        <span id="lastnameErr" class="text-danger"></span>
      </div>
 
     </div>
@@ -191,7 +197,7 @@ input[type=submit]:hover {
  {{!-- address --}}
      <label >Address</label>
     <input type="text" id="address" name="address" value="{{address.address}}" >
-     <span id="addresserror" class="text-danger"></span>
+     <span id="addressErr" class="text-danger"></span>
      {{!-- address --}}
      {{!-- email --}}
    
@@ -224,13 +230,13 @@ input[type=submit]:hover {
 
 <div style="width: 100%;">
   <label >Email</label>
-    <input value="{{address.email}}" type="email" id="lname" name="email" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;" >
-
+    <input  value="{{address.email}}" type="email" id="email" name="email" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;" >
+  <span id="emailErr" class="text-danger"></span>
 
 </div>
 {{!-- cityzipcode --}}
 
-<div style="display: flex; justify-content: space-between;">
+<div class="add" style="display: flex; justify-content: space-between;">
 
       <div>
 
@@ -245,8 +251,9 @@ input[type=submit]:hover {
       <div style="display: flex; flex-direction: column;">
       {{!-- zipcode --}}
 
-    <label id="zipcode">Zipcode</label>
-      <input value="{{address.zipcode}}" type="number" name="zipcode" id="" style="height: 50px;border-radius: 3px;border: 1px solid grey; width: 250px;">
+    <label id="">Zipcode</label>
+      <input value="{{address.zipcode}}" type="number" name="zipcode" id="zipcode" style="height: 50px;border-radius: 3px;border: 1px solid grey; width: 250px;">
+        <span id="zipcodeErr" class="text-danger"></span>
       </div>
       </div>
       {{!-- cityzipcode --}}
@@ -255,31 +262,12 @@ input[type=submit]:hover {
       <div style="width: 100%;">
   <label >Phone Number</label>
     <input value="{{address.phonenumber}}" type="number" id="phonenumber" name="phonenumber" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;" >
-
+  <span id="phonenumberErr" class="text-danger"></span>
 
 </div>
       
 {{!-- phone --}}
-    <div style="display: flex; flex-direction: column;">
     
-    <span>Address Type</span>
-     <div>
-
-    <input type="radio" {{#if type.home}}checked{{/if}} name="addresstype" id="" value="home"><span style="margin-left: 15px;">Home</span>
-     </div>
-     <div>
-
-    <input type="radio"  {{#if type.work}}checked{{/if}}  name="addresstype" id="" value="work"><span style="margin-left: 15px;">Work</span>
-     </div>
-     <div>
-
-    <input type="radio" {{#if type.address1}}checked{{/if}}  name="addresstype" id="" value="address-1"><span style="margin-left: 15px;">Address-1</span>
-     </div>
-     <div>
-
-    <input type="radio" {{#if type.address2}}checked{{/if}}  name="addresstype" id="" value="address-2"><span style="margin-left: 15px;">Address-2</span>
-     </div>
-    </div>
 
    <div style="width: 100%;">
     <button type="submit" style="width: 100%; margin-top: 20px; height: 50px;color: white;background-color: red;" class="btn" >Save Changes</button>
@@ -310,12 +298,132 @@ function view(){
 
 
 document.getElementById("shippingform").addEventListener("submit",function(e){
-    var firstname = document.getElementById("firstname").value;
-    var firstname = document.getElementById("lastname").value;
-    var address = document.getElementById("address").value;
-
 
   
+ let firstName = document.getElementById("firstname").value;
+ let firstNameErr=document.getElementById("firstnameErr")
+ let lastName = document.getElementById("lastname").value;
+ let lastNameErr = document.getElementById("lastnameErr");
+
+ let email = document.getElementById("email").value;
+ let emailErr = document.getElementById("emailErr");
+
+ let address = document.getElementById("address").value;
+ let addressErr = document.getElementById("addressErr")
+
+ let phoneNumber = document.getElementById("phonenumber").value;
+ let phoneNumberErr = document.getElementById("phonenumberErr");
+
+ let zipcode = document.getElementById("zipcode").value;
+ console.log(zipcode,'zip')
+ let zipcodeErr = document.getElementById("zipcodeErr")
+
+
+
+ function firstnameError(msg){
+  e.preventDefault()
+  firstNameErr.innerHTML=msg
+} 
+
+function LastnameError(msg){
+    e.preventDefault()
+  lastNameErr.innerHTML=msg
+}
+function emailError(msg){
+   e.preventDefault()
+  emailErr.innerHTML=msg
+}
+function addressError(msg){
+  e.preventDefault()
+  addressErr.innerHTML=msg
+}
+
+function phonenumberError(msg){
+  e.preventDefault()
+  phoneNumberErr.innerHTML=msg
+}
+function zipcodeError(msg){
+  e.preventDefault()
+  zipcodeErr.innerHTML=msg
+}
+//firstname
+if(firstName==''){
+ firstnameError('Required')
+
+}
+
+else if(firstName.length>10){
+ firstnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(firstName)){
+  firstnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(firstName)){
+  firstnameError('Number not allowed')
+}
+else{
+  firstNameErr.innerHTML=''
+}
+
+//lastname;
+if(lastName==''){
+  LastnameError('Required')
+}
+
+else if(lastName.length>10){
+ LastnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(lastName)){
+  LastnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(lastName)){
+  LastnameError('Number not allowed')
+}
+else{
+  lastNameErr.innerHTML=''
+}
+
+//address
+if(email==''){
+  emailError('Required')
+}
+else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
+  emailError('Enter a valid email Address')
+}
+else{
+  emailErr.innerHTML=''
+}
+
+//adress
+if(address==''){
+  addressError('Required')
+}
+else if(address.length<15){
+  addressError('Minimum 15 character required')
+}
+else{
+  addressErr.innerHTML=''
+}
+
+//phonenumber
+
+if(phoneNumber==''){
+  phonenumberError('Required')
+}
+else if(phoneNumber.length!=10){
+   phonenumberError('Must be 10 digit')
+}
+else{
+  phoneNumberErr=''
+}
+//zipcode
+if(zipcode==''){
+  zipcodeError('Required')
+}
+else{
+  zipcode=''
+}
+
 
 })
 

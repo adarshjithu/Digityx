@@ -341,20 +341,20 @@ margin: 20px;
                      <label for="" >Product Name</label><br>
                      <span class="text-danger" id="nameError"></span> <br>
                      
-                     <input class="inpu" id="name" type="text" " name="name" required value="{{products.name}}"> 
+                     <input class="inpu" id="name" type="text" " name="name"  value="{{products.name}}"> 
                   </div>
 
                   <div class=" col-md-6 col-lg-6 col-sm-12 col-xl-6 ">
                     <label for="">Price</label><br>
                     <span class="text-danger" id="priceError"></span><br>
-                    <input id="price" type="number" " class="inpu" required name="price" value="{{products.price}}">
+                    <input id="price" type="number" " class="inpu"  name="price" value="{{products.price}}">
                   </div>
                   
                    <div class=" col-md-6 col-lg-6 col-sm-12 col-xl-6 ">
                      <label for="" >Description</label>
                      <br>
-                     <span id="descriptionError" class="text-danger"></span>
-                     <input class="inpu" type="text" " required name="description" value="{{products.description}}">
+                     <span id="descriptionErr" class="text-danger"></span>
+                     <input class="inpu" type="text" id="description" name="description" value="{{products.description}}">
                    </div>
                   
                  <div class="col-lg-6 col-sm-12 col-xl-6">
@@ -377,7 +377,7 @@ margin: 20px;
 
                       <label for=""">Quantity</label>
                 
-                       <input class="inpu" value="{{products.quantity}}" type="number"  name="quantity" required id="quantity" onchange="changequantity()" style="">
+                       <input class="inpu" value="{{products.quantity}}" type="number"  name="quantity"  id="quantity" onchange="changequantity()" style="">
                        <br><span class="text-danger" id="quantityError"></span>
                   
                        </div>
@@ -400,7 +400,7 @@ margin: 20px;
                        <div class="col-lg-4 col-sm-12 col-xl-4">
 
                      <label for="" ">Discount</label><br>
-                     <span id="discountError" class="text-danger"></span>
+                     <span id="discountErr" class="text-danger"></span>
                       <input class="inpu"  id="discount" value="{{products.discount}}" type="number"  name="discount" style="width: 100%;margin-top: 0px;">
                        </div>
 
@@ -461,7 +461,7 @@ margin: 20px;
 
            <img  id="img" style="width: 100px; height: 100px; margin-top: 30px;" src="/assets/products/{{products.image}}" alt="" >
 
-          <a  style="cursor: pointer;" onclick="deleteImage('{{products.image}}','main')"> 
+          <a style="cursor: pointer;" onclick="deleteImage('{{products.image}}','main')"> 
 
           <svg  xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#fe0134" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
           </a>
@@ -602,63 +602,119 @@ margin: 20px;
 
 
       var error = false;
-const form = document.getElementById('form');
-const name = document.getElementById('name');
-const price = document.getElementById('price');
-const  quantity = document.getElementById('quantity');
-const nameError = document.getElementById('nameError');
-const priceError = document.getElementById('priceError');
+
 
 const quantityError = document.getElementById('quantityError');
+
+
   form.addEventListener('submit',function(e){
-    const pattern = /^[a-zA-Z0-9 ]+$/;
-    var numberPattern =/\d/
+    const form = document.getElementById('form');
+const name = document.getElementById('name').value;
+const price = document.getElementById('price').value;
+const  quantity = document.getElementById('quantity').value;
+const  description = document.getElementById('description').value;
+const  discount = document.getElementById('discount').value;
+const nameErr = document.getElementById('nameError');
+const descriptionErr = document.getElementById('descriptionErr');
+const discountErr = document.getElementById('discountErr');
+const priceErr = document.getElementById('priceError');
 
- 
-{{!-- 
-    if(/\d/.test(name.value)){
-      e.preventDefault()
-       nameError.innerHTML='Invalid value'
-    } --}}
-    if(pattern.test(name.value)){
-    }
-    else{
-       nameError.innerHTML='Invalid value'
-      e.preventDefault()
-      
-    }
-    if(name.value.length>35){
-      nameError.innerHTML='Must be Lessthan 15 charecters'
-      e.preventDefault()
-    }
-    if(name.value.length<4){
-      nameError.innerHTML='Must be morethan 4 charecters'
-      e.preventDefault()
-    }
 
-{{!-- price validation --}}
+const quantityErr = document.getElementById('quantityError');
 
-   if(price.value<=0){
 
-    priceError.innerHTML='Price should a positive number'
-    e.preventDefault()
+function nameError(msg){
+  e.preventDefault()
+  nameErr.innerHTML=msg
+}
+
+function priceError(msg){
+  e.preventDefault()
+  priceErr.innerHTML=msg
+}
+
+function discountError(msg){
+  e.preventDefault()
+  discountErr.innerHTML=msg
+}
+function quantityError(msg){
+  e.preventDefault()
+  quantityErr.innerHTML=msg
+}
+function descriptionError(msg){
+  e.preventDefault()
+  descriptionErr.innerHTML=msg
+}
+
+
+
+{{!-- name --}}
+  if(name==''){
+    nameError('Required')
+  }
+  else if(name.length<=4){
+     nameError('Must be Above 4 charector')
+  }
+  else{
+    nameErr.innerHTML=''
+  }
+
+
+  {{!-- price --}}
+
+  if(price==''){
+    priceError('Required')
+  }
+  else if(parseInt(price)<0){
+ priceError('Negtive number not allowed')
+  }
+  else if(parseInt(price)<500){
+    priceError('price must be greaterthan 500')
+  }
+  else if(parseInt(price)<parseInt(discount)){
+    priceError('price must be greaterthan Discount')
+  }
+  else{
+    priceErr.innerHTML=''
+  }
+
+
+  {{!-- discount --}}
+   if(discount==''){
+ discountError('Required')
    }
-   if(price.value.length>6){
-    priceError.innerHTML='Price should be less than 6 charecters'
-   }
+  else if(parseInt(discount)>parseInt(price)){
+    discountError('Must be lowerthan price')
+  }
+  else if(parseInt(discount)<=0){
+     discountError('Invalid Value')
+  }
+  else{
+    discountErr.innerHTML=''
+  }
 
-   {{!-- quantity --}}
+  {{!-- quantity --}}
+if(quantity==''){
+ quantityError('Required')
+}
+else if(parseInt(quantity)<1){
+ quantityError('Quantity  be greaterthan 0')
+}
+  else if(parseInt(quantity)>100){
+    quantityError('Quantity be lessthan 100')
+  }
+  else{
+    quantityErr.innerHTML=''
+  }
 
-    
-   if(quantity.value<0){
-    quantityError.innerHTML='Invalid Value'
-    e.preventDefault()
-   }
-   if(quantity.value>100){
-  quantityError.innerHTML='Quantity must be less than 100'
-    e.preventDefault()
-   }
-      
+
+  {{!-- description --}}
+
+  if(description==''){
+    descriptionError('Required')
+  }
+
+
   })
     
     
@@ -672,9 +728,11 @@ const quantityError = document.getElementById('quantityError');
 
 <script>
 function deleteImage(image,type){
-console.log(type)
+
 var proId = document.getElementById("productId").value;
-  fetch(`https://digityx.shopproducts/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
+  console.log(image,type,pro')
+
+  fetch(`http://localhost:3000/deleteImage?proId=${proId}&&image=${image}&&type=${type}`).then((data)=>{
    return data.json()
   }).then((result)=>{
     location.reload()

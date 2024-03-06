@@ -7,25 +7,58 @@ const wishListCollection = require("../models/wishlistModel");
 const crypto = require("crypto");
 const Razorpay = require("razorpay");
 const paymentCollection = require("../models/paymentModel");
-const couponCollection = require('../models/couponModel')
+const couponCollection = require('../models/couponModel');
+const productsCollection = require('../models/productModel');
+const { checkoutProductChecking } = require("../middlewares/middleware");
 const razorpay = new Razorpay({
      key_id: "rzp_test_REpsQUqylPJZxt",
      key_secret: "B73pT7m7mlLQTj1Zzlx6Gvx5",
 });
 
-const addToCart = asyncHandler(async (req, res) => {
-
+const addToCart = asyncHandler(async (req, res,next) => {
+     let productCollectionCount = await productsCollection.findOne({_id:req.query.proId}); //fetching quantity of a product in the product collection
+     let outOfStock = false;
      try {
-          let product = await productCollection.findOne({_id:req.query.proId});//checking product quantity
-          if(product.quantity<=0){
-               
+          if(productCollectionCount.quantity <=0){
+           outOfStock = true;
           }
           else{
+               
+               
+               let cart = await cartCollection.findOne({user:req.session.user._id});//checking product quantity
+               if(cart){
+               let products = cart.products;
+               let productExistInCart = products.findIndex((e)=>e.item == req.query.proId)
+            
+               console.log(productExistInCart)
+               if(productExistInCart!=-1){
+                   let item = products.filter((e)=>{
+                    return e.item ==req.query.proId;
+     
+                   })
+                  
+                  if((productCollectionCount.quantity-item[0].count)<1){
+                    outOfStock=true;
+                  }
+                 
+               }
+               else{
+ 
+               }}
+          }
 
+
+      console.log("out of stock",outOfStock)
+          if(outOfStock){    
+               console.log('josn')      //checking product out of stock or not ;
+               res.json({success:false})
+          } 
+          else{
+          console.log('cal')
 
           const userId = req.session.user._id;
 
-          const proId = req.query.proId;
+          const proId = req.query.proId; 
 
           const cart = await cartCollection.findOne({ user: userId });
           //if cart already exists
@@ -34,14 +67,14 @@ const addToCart = asyncHandler(async (req, res) => {
                if (proExists != -1) {
                     await cartCollection.updateOne({ user: userId, "products.item": proId }, { $inc: { "products.$.count": 1 } });
                     //decrementing quantity
-                    await productCollection.updateOne({_id:req.query.proId},{$inc:{quantity:-1}})
+                   
                } else {
+                   
                     await cartCollection.updateOne(
                          { user: userId, user: userId },
                          { $push: { products: { item: proId, count: 1 } } }
                     );
                     //decrementing quantity
-                    await productCollection.updateOne({_id:req.query.proId},{$inc:{quantity:-1}})
                }
           }
 
@@ -57,16 +90,20 @@ const addToCart = asyncHandler(async (req, res) => {
 
           ///cartcount
           let cartCount = await cartCollection.findOne({ user: userId });
-     
-          res.json({ count: cartCount.products.length
+          var Count;
+          if(cartCount){
+             Count = cartCount.products.length;
+          }
+          else{
+               Count=0
+          }
+          res.json({ count: Count,success:true });}
                //  ,totalProducts:proCount
-               });}
+               
+
      } catch (error) {
-          console.log(error.message);
+          console.log(error);
        
-          var err = new Error();
-          error.statusCode = 400;
-          next(err)
      }
 });
 
@@ -163,12 +200,6 @@ const deleteCartItem = asyncHandler(async (req, res) => {
      if (cartCount.products.length == 1){
           var cartObj = await cartCollection.findOne({user:req.session.user._id});
 
-          let product =  cartObj.products.filter((e)=>{
-               return e.item ==  req.params.id;
-          })
-     
-     
-          await productCollection.updateOne({_id:product[0].item},{$inc:{quantity:product[0].count}})
         
           await cartCollection.deleteOne({user:req.session.user._id});
           res.redirect("/cart/view-cart");
@@ -178,14 +209,9 @@ const deleteCartItem = asyncHandler(async (req, res) => {
      
      
      
-     var cartObj = await cartCollection.findOne({user:req.session.user._id});
+  
 
-     let product =  cartObj.products.filter((e)=>{
-          return e.item ==  req.params.id;
-     })
-
-
-     await productCollection.updateOne({_id:product[0].item},{$inc:{quantity:product[0].count}})
+   
    
   
           let user = await cartCollection.updateOne(
@@ -211,16 +237,39 @@ const deleteCartItem = asyncHandler(async (req, res) => {
 //change quantity--------------------------------------------------------------------
 
 const changeQuantity = asyncHandler(async (req, res) => {
+     let outOfStock = false
+     let proCount = await productCollection.findOne({_id:req.query.proId});
+     let cartItems = await cartCollection.findOne({user:req.session.user._id});
+     let products = cartItems.products;
+     let product = products.filter((e)=>{
+          return e.item == req.query.proId;
+     })
+     console.log(product)
+     console.log(proCount.quantity)
+     if(req.query.count==1&&(proCount.quantity-product[0].count)<1){
+          outOfStock=true
+     }
+     if(proCount.quantity<=0&&req.query.count==1){
+          outOfStock = true;
+     }
+   //product count
+     let q= 1
      try {
           let userId = req.session.user;
           let proId = req.query.proId;
           let count = parseInt(req.query.count);
 
           //updataing cart count
-          const cart = await cartCollection.updateOne(
-               { user: userId, "products.item": proId },
-               { $inc: { "products.$.count": count } }
-          );
+          if(outOfStock){
+
+          }
+          else{
+
+               const cart = await cartCollection.updateOne(
+                    { user: userId, "products.item": proId },
+                    { $inc: { "products.$.count": count } }
+               );
+          }
 
           var inc
        
@@ -230,7 +279,14 @@ const changeQuantity = asyncHandler(async (req, res) => {
           else{
                inc=1;
           }
-          await productCollection.updateOne({_id:proId},{$inc:{quantity:inc}})
+          if(q<=0&&count==1){
+
+          }
+          else{
+
+           
+               
+          }
 
           ///fetching subtotal of a specific product
           const subtotal = await cartCollection.aggregate([
@@ -272,8 +328,16 @@ const changeQuantity = asyncHandler(async (req, res) => {
                     $project: { total: "$total" },
                },
           ]);
+          if(outOfStock){
+               res.json({ success: false, total: subtotal[0].total });
+          }
+          else{
 
-          res.json({ success: true, total: subtotal[0].total });
+           
+            
+               res.json({ success: true, total: subtotal[0].total });
+          }
+
      }
      catch(error){
           console.log(error.message);
@@ -286,11 +350,14 @@ const changeQuantity = asyncHandler(async (req, res) => {
 
 //cart count-----------------------------------------------------------------------
 
-const cartCount = asyncHandler(async (req, res) => {
+const cartCount = asyncHandler(async (req, res,next) => {
      try {
          
           //fechting count of products
           const cart = await cartCollection.findOne({ user: req.session.user._id });
+          if(cart){
+
+
    
           var cartCount;
           if (cart.products) {
@@ -346,7 +413,11 @@ const cartCount = asyncHandler(async (req, res) => {
           const subTotal = cartDatas[0].total;
           const totalPrice = subTotal - discount;
 
-          res.json({ count: cartCount, discount: discount, subTotal: subTotal, totalPrice: totalPrice });
+          res.json({ count: cartCount, discount: discount, subTotal: subTotal, totalPrice: totalPrice });}
+          
+          else{
+               res.json({count:0})
+          }
      }
      catch(error){
     
@@ -361,8 +432,18 @@ const cartCount = asyncHandler(async (req, res) => {
 //checkout page----------------------------------------------------------------------
 
 const  checkoutControler = asyncHandler(async (req, res) => {
-     
+    
+    
+
+     let user = JSON.stringify(req.session.user._id)
+     // checkoutProductChecking()
      try {
+          let counting = await cartCollection.findOne({user:req.session.user._id});
+          if(!counting){
+              res.redirect("/")
+          }
+          else{
+       
           if (req.session.addresstype == null) {
                req.session.addresstype = "home";
           }
@@ -412,19 +493,22 @@ const  checkoutControler = asyncHandler(async (req, res) => {
           }
           ///////////////////
           //finding address
-          var add = await addressCollection.aggregate([
-               { $match: { user: req.session.user._id, addresstype: req.session.addresstype } },
+          var address = await addressCollection.aggregate([
+               { $match: { user: req.session.user._id } },
           ]);
           
-          var address = add[0];
+          
           var noAddress = false;
           if(address==undefined){
+               noAddress=true
+          }
+          else if(address.length==0){
                noAddress=true
           }
           else{
                false;
           }
-       
+   
           
 ////////////////////////////////
            //finding total amount for coupon
@@ -469,7 +553,7 @@ const  checkoutControler = asyncHandler(async (req, res) => {
           const coupon = await couponCollection.aggregate([{$match:{minimumpurchase:{$lt:total},isActive:true}},{$match:{
                'users':{$not:{$elemMatch:{$eq:req.session.user._id}}}
           }}])
-          console.log('coupon',coupon)
+        
     
      
           
@@ -479,8 +563,8 @@ const  checkoutControler = asyncHandler(async (req, res) => {
           const userId = req.session.user._id;
          
           //////////////////////////////
-          res.render("cart/checkout", { home: true, cart, address,coupon ,userId,noAddress});
-         
+          res.render("cart/checkout", { home: true, cart, address,coupon ,userId,noAddress,user});
+     }  
      } 
      catch(error){
           console.log(error.message)
@@ -495,37 +579,33 @@ const  checkoutControler = asyncHandler(async (req, res) => {
 //checkout post controler--------------------------------------------------------------------
 
 const checkoutPostControler = asyncHandler(async (req, res) => {
+    
+
+    //selecting the address for checkout
+    let address = await addressCollection.findOne({$and:[{user:req.session.user._id},{home:true}]});
+    console.log(address,'adfsdfasdfsdfasdfasd')
+    //seting address to body
+    req.body.firstname=address.firstname
+    req.body.lastname=address.lastname
+    req.body.address=address.address
+    req.body.email=address.email
+    req.body.number=address.phonenumber
+    req.body.country=address.country
+    req.body.state=address.state
+    req.body.zipcode=address.zipcode
+
+
+     
      req.body.deliverycharge = parseInt(req.body.deliverycharge)
      req.body.subtotal=parseInt(req.body.subtotal);
      req.body.referaldiscount=parseInt(req.body.referaldiscount)
      req.body.discount=parseInt(req.body.discount);
      req.body.total = parseInt(req.body.total)
-     console.log(req.body)
+
      try{
 
    
-     if(req.body.save=='true'){
-          const addr = {
-               user:req.session.user._id,
-               firstname:req.body.firstname,
-               lastname:req.body.lastname,
-               address:req.body.address,
-               country:req.body.country,
-               state:req.body.state,
-               email:req.body.email,
-               city:req.body.city,
-               zipcode:req.body.zipcode,
-               phonenumber:req.body.phonenumber,
-               addresstype:'home'
-          
-          }
-  
-         
-          await addressCollection.create(addr);
-     }
-     else{
-          console.log('save not true')
-     }
+     
      const product = await cartCollection.findOne({ user: req.session.user });
      const productCount = product.products.length;
      var cart;
@@ -605,6 +685,7 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
           };
 
           await orderCollection.create(orderObj);
+         
           const orderObject = await orderCollection.findOne(orderObj);
           //payment object to store in payment collections
           req.session.orderId=orderObject._id;
@@ -626,7 +707,7 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
                req.session.singleProduct=null;
           }
           else{
-               await cartCollection.deleteOne({ user: req.session.user._id });
+              
 
           }
           res.redirect("/cart/order-success");
@@ -664,8 +745,15 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
           await orderCollection.create(orderObj);
           const orderData = await orderCollection.findOne(orderObj).lean();
           
+          const paymentObj = {
+               order: '',
+               type: "Online",
+               orderDetails:req.session.orderId ,
+          };
+          //saving payment details to payment collection
 
-          await cartCollection.deleteOne({ user: req.session.user._id });
+          await paymentCollection.create(paymentObj)
+
 
           await razorpay.orders
                .create({
@@ -689,9 +777,10 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
                          console.log(error);
                     }
                });
-     }}
+     }
+}
      catch(error){
-          console.log(error.message);
+          console.log(error);
        
      }
 });
@@ -761,7 +850,21 @@ const OrderSuccess = asyncHandler(async(req,res)=>{
           let data =  await orderCollection.findOne({_id:req.session.orderId});
           const totalAmout = data.total;
           let coupon = await couponCollection.find({}).lean()
-          console.log(data.total)
+          let cart = await cartCollection.findOne({user:req.session.user._id});
+          let products = cart.products;
+          for(let i of products){
+              let data = await productsCollection.updateOne({_id:i.item},{
+               
+
+          
+               $inc:{
+                    quantity:`-${i.count}`
+               }
+              })
+              console.log(data)
+          }
+
+          await cartCollection.deleteOne({user:req.session.user._id})
            res.render("cart/order-success")
      }
      catch(error){
@@ -845,6 +948,60 @@ const singleProduct = asyncHandler(async(req,res)=>{
      next(err)
    }
 })
+
+//checkcheckout ----------------------------------------
+
+const checkCheckout = asyncHandler(async(req,res)=>{
+let cart = await cartCollection.findOne({user:req.session.user._id});
+let products=cart.products;
+let outOfStock=[];
+for(let e of products){
+     let data = await productCollection.findOne({_id:e.item});
+     if(data.quantity<e.count){
+          outOfStock.push(data.name)
+     }
+
+}
+let result ='';
+for(let i of outOfStock){
+     result = result+`,${i}`
+}
+console.log(result)
+if(outOfStock.length==0){
+     res.json({success:true})
+}
+else{
+     res.json({success:false,result:outOfStock})
+}
+
+
+})
+
+//updateCatrt-----------------------------------------------------------------------------
+const updateCart = asyncHandler(async(req,res)=>{
+     let cart = await cartCollection.findOne({user:req.session.user._id});
+let products=cart.products;
+let outOfStock=[];
+for(let e of products){
+     let data = await productCollection.findOne({_id:e.item});
+     if(data.quantity<e.count){
+          outOfStock.push(e.item)
+     }
+
+}
+if(cart.products.length==1){
+     await cartCollection.deleteOne({user:req.session.user._id});
+}else{
+console.log('out of stcollasdasdfasdfasdf',outOfStock)
+     for(let i of outOfStock){
+     
+          await cartCollection.updateOne({user:req.session.user._id},{
+               $pull:{products:{item:i}}
+          })
+     }
+}
+res.json({success:true})
+})
 module.exports = {
      addToCart,
      cartControler,
@@ -858,5 +1015,7 @@ module.exports = {
      OrderSuccess,
      outOfStock,
      addressExistsControler,
-     singleProduct
+     singleProduct,
+     checkCheckout,
+     updateCart
 };

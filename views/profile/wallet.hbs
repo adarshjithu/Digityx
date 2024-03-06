@@ -89,6 +89,11 @@ input[type=submit]:hover {
 span{
     font-weight: 600;
 }
+td{
+  font-weight: 600;
+
+
+}
 
    @media only screen and  (max-width:750px){
     .ul li a span{
@@ -172,8 +177,8 @@ span{
 
     <div class="right">
        
-        <div class="row" style="display: flex;">
-            <div  class="row" style="width: 100%;background-color: white;box-shadow: 1px 1px 10px grey; border-radius: 5px;box-shadow: 1px 1px 10px grey;">
+        <div class="row" >
+            <div  class="row" style="width: 100%;background-color: white;box-shadow: 1px 1px 10px grey; border-radius: 5px;box-shadow: 1px 1px 5px black;margin-left: 1px;">
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-12" style="display: flex;justify-content: center;align-items: center;"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6tkeoP88ky_k3ZW99UQFPLav-xZy6HJHAcvUASO-AZw&s" alt="" style="height: 60%;"></div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-12" style="display: flex;justify-content: center;align-items: center;">
                     <div>
@@ -183,15 +188,16 @@ span{
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-4 col-md-4 col-sm-4 col-xs-12" style="display: flex;justify-content: center;align-items: center;">
-                    <button style="color: white;background: red;font-weight: 600;margin-bottom: 10px;" class="btn">Add Money</button></div>
+                    <button style="color: white;background: red;font-weight: 600;margin-bottom: 10px;" class="btn">Add Money</button>
+                    </div>
 
         </div>
       {{!-- /////////// --}}
       
 
-     <div class="col-xl-12" style="margin-top: 30px;">
+     <div class="col-xl-12" style="margin-top: 50px;background-color: white;width: 100%;">
 
- <table class="table" id="myTable" style="width: 100%;background-color: white;box-shadow: 1px 1px 10px black;">
+ <table class="table" id="myTable" style="width: 100%;background-color: white;box-shadow: 1px 1px 2px black;">
   <thead>
     <tr>
       <th scope="col" style="display: flex;align-items: center;justify-content: center;" >Index</th>
@@ -199,17 +205,20 @@ span{
       <th scope="col">Description</th>
       <th scope="col">Date</th>
       <th scope="col">Amount</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
     {{#each trans}}
     <tr>
     
-      <td style="display: flex;justify-content: center;align-items: center;">{{@index}}</td>
-      <td>{{this.transactionId}}</td>
-      <td>{{this.description}}</td>
+      <td  style="display: flex;justify-content: center;align-items: center;">{{@index}}</td>
+      <td >{{this.transactionId}}</td>
+      <td id="tds">{{this.description}}</td>
       <td>{{this.date}}</td>
-      <td>{{this.amount}}</td>
+      <td>&#8377;{{this.amount}}</td>
+      <td><button class="btn btn-primary" onclick="removeWallet('{{this.transactionId}}')">Remove</button></td>
+    </tr>
     </tr>
     {{/each}}
 
@@ -244,7 +253,29 @@ span{
 <script>
   $(document).ready(function() {
 
-    $('#myTable').DataTable();
+    $('#myTable').DataTable({responsive:true});
     responsive:true;
   });
+</script>
+<script>
+  let td = document.querySelectorAll('#tds')
+  for(let i of td){
+    if(i.innerHTML=='Order Cancel'){
+      i.style.color='red'
+    }
+    if(i.innerHTML=='Order Returned'){
+      i.style.color='orange'
+    }
+  }
+</script>
+
+<script>
+  let user = {{{user}}}
+  async function removeWallet(id){
+
+    
+   let Id=encodeURIComponent(id)
+  
+    fetch(`http://localhost:3000/profile/removeTrans?userId=${Id},`)
+  }
 </script>

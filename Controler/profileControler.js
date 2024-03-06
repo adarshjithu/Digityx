@@ -6,9 +6,14 @@ const walletCollection = require("../models/walletModel")
 
 //profile address------------------------------------------------------------------
 const profileAddressControler = asyncHandler(async (req, res) => {
+ 
+     let error = req.query.error
      try {
+
+   
           const address = await AddressCollection.find({ user: req.session.user._id }).lean();
-          res.render("profile/address", { home: true, address });
+          console.log(address)
+          res.render("profile/address", { home: true, address ,error});
      } catch (error) {
           console.log(error.message);
           var err = new Error();
@@ -19,16 +24,39 @@ const profileAddressControler = asyncHandler(async (req, res) => {
 //address post---------------------------------------------------------------------------
 
 const profileAddressPostControler = asyncHandler(async (req, res) => {
+     req.body.user=req.session.user._id;
+     let addressError=''
      try {
-          const address = req.body;
-          address.user = req.session.user._id;
-          const addressObj = await AddressCollection.findOne({ addresstype: req.body.addresstype });
-          if (addressObj) {
-               res.render("profile/address", { home: true, error: true });
-          } else {
-               await AddressCollection.create(address);
-               res.redirect("/profile/address");
+         
+         let emailexists = await AddressCollection.find({email:req.body.email});
+      
+         let addressexists = await AddressCollection.find({address:req.body.address});
+         if(emailexists.length>0){
+          
+          addressError='Email Already Exists'
+          res.redirect(`/profile/address?error=${addressError}`)
+         }
+         else if(addressexists.length>0){
+          addressError='Address Already Exists'
+          res.redirect(`/profile/address?error=${addressError}`)
+         }
+       
+
+         else{
+         let address = await AddressCollection.find({})
+          if(address.length<3){
+                    if(address.length==0){
+                         req.body.home=true
+                    }
+                    await AddressCollection.create(req.body);
+                    res.redirect("/profile/address")
           }
+          else{
+               addressError='Maximum 3 Address Allowed'
+               res.redirect(`/profile/address?error=${addressError}`)
+          }
+         }
+
      } catch (error) {
           console.log(error.message);
           var err = new Error();
@@ -189,7 +217,7 @@ const profileIconControler = asyncHandler(async(req,res)=>{
 
 // wallet----------------------------------------------------------------------------
 const walletControler = asyncHandler(async(req,res)=>{
-    
+    let user = JSON.stringify(req.session.user._id);
      const wallet =  await walletCollection.findOne({user:req.session.user._id}).sort({"_id":1}).lean();
      let trans= []
     if(wallet){
@@ -205,7 +233,72 @@ const walletControler = asyncHandler(async(req,res)=>{
      else{
           amount=0
      }
-     res.render("profile/wallet",{home:true,amount,wallet,trans})
+     res.render("profile/wallet",{home:true,amount,wallet,trans,user})
+}) 
+
+//--------------------------------change address---------------------------------------
+
+
+const changeAddress = asyncHandler(async(req,res)=>{
+console.log(req.query.id)
+await AddressCollection.updateOne({$and:[{user:req.session.user._id},{home:true}]},{
+
+     
+$set:{
+     home:false
+}
+})
+await AddressCollection.updateOne({_id:req.query.id},{
+     $set:{
+          home:true
+     }
+})
+res.json({})
+})
+
+/////////////////////////////////change address=----------------------------------------
+
+
+const checkoutChangeAddress = asyncHandler(async(req,res)=>{
+     // console.log(req.body)
+     // console.log(req.session.user._id)
+     req.body.user=req.session.user._id;
+     let addressError=''
+
+     let emailexists = await AddressCollection.find({email:req.body.email});
+      
+     let addressexists = await AddressCollection.find({address:req.body.address});
+     if(emailexists.length>0){
+      
+      addressError='Email Already Exists'
+      res.json({success:false,error:addressError})
+     }
+     else if(addressexists.length>0){
+      addressError='Address Already Exists'
+      res.json({success:false,error:addressError})
+     }
+   
+
+     else{
+     let address = await AddressCollection.find({})
+      if(address.length<3){
+                if(address.length==0){
+                     req.body.home=true
+                }
+                await AddressCollection.create(req.body);
+               res.json({success:true})
+      }
+      else{
+           addressError='Maximum 3 Address Allowed'
+           res.json({success:false,error:addressError})
+      }
+     }
+     
+})
+
+
+const removeTrans = asyncHandler(async(req,res)=>{
+     console.log(req.query)
 })
 module.exports = { profileAddressControler, profileAddressPostControler, deleteAddress, editAddress,editAddressPost,accountDetails
-,accountDetailsPost ,profileChangeImage,profileIconControler,walletControler};
+,accountDetailsPost ,profileChangeImage,profileIconControler,walletControler,changeAddress,checkoutChangeAddress,removeTrans};

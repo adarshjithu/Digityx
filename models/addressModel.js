@@ -11,6 +11,7 @@ const addressSchema = new mongoose.Schema({
     zipcode:Number,
     phonenumber:Number,
     addresstype:String
+    ,home:{type:Boolean,default:false}
 
 })
 

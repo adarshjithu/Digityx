@@ -192,7 +192,7 @@ button {
     
 
   <div class="login-box">
-    <form action="/user_login" method="post">
+    <form action="/user_login" method="post" id="loginForm">
       <h2>Login</h2>
      {{#if isActive}}
                     <span class="text-danger">You have been blocked by the admin</span>
@@ -211,7 +211,7 @@ button {
         <span class="icon">
           <ion-icon name="mail"></ion-icon>
         </span>
-        <input type="email" style="text-transform: none;" required name="email">
+        <input type="email" id="email" style="text-transform: none;" required name="email">
         <br>{{#if err.email.path}} <span class="text-danger">{{err.email.msg}}</span>{{/if}}
         <label>Email</label>
       </div>
@@ -220,7 +220,7 @@ button {
         <span class="icon">
           <ion-icon name="lock-closed"></ion-icon>
         </span>
-        <input type="password"  style="text-transform: none;" required name="password">
+        <input type="password" id="password"  style="text-transform: none;" required name="password">
          <br>{{#if err.password.path}} <span class="text-danger">{{err.password.msg}}</span>{{/if}}
         <label>Password</label>
       </div>
@@ -239,3 +239,37 @@ button {
   </div>
 
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.getElementById('loginForm').addEventListener("submit",(e)=>{
+  e.preventDefault()
+let email = document.getElementById('email').value;
+let password = document.getElementById("password").value
+console.log(email,password)
+
+fetch(`http://localhost:3000/userLogin?email=${email}&&password=${password}`).then((result)=>{
+  return result.json()
+}).then((result)=>{
+    if(result.success==true){
+      Swal.fire({
+  position: "top",
+  icon: "success",
+  title: "Authenication SuccessFull",
+  showConfirmButton: false,
+  timer: 1500
+});
+setTimeout(()=>{location.href = 'http://localhost:3000/user_home'},1500)
+     
+    }
+    else{
+
+  Swal.fire(`${result.error}`);
+    }
+
+
+
+})
+
+})
+</script>

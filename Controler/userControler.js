@@ -50,19 +50,21 @@ const loginControler = asyncHandler(async (req, res, next) => {
 //loginpost controler----------------------------------------------------------------------------
 
 const loginPostControler = asyncHandler(async (req, res) => {
+    console.log(req.query)
      try {
-          const user = await UserCollection.findOne({ email: req.body.email });
+          const user = await UserCollection.findOne({ email: req.query.email });
+          console.log(user)
 
-          if (user && (await user.isPasswordMatched(req.body.password))) {
+          if (user && (await user.isPasswordMatched(req.query.password))) {
                if (user.isActive == true) {
                     req.session.user = user;
 
-                    res.redirect("/user_home");
+                    res.json({success:true});
                } else {
-                    res.render("user/login", { isActive: true });
+                    res.json({success:false,error:'You have been blocked by the admin'});
                }
           } else {
-               res.render("user/login", { logginError: true });
+               res.json({success:false,error:'Invalid Credentials'});
           }
      } catch (error) {}
 });
@@ -103,7 +105,7 @@ const homeControler = asyncHandler(async (req, res, next) => {
           }])
           let newArrival = newArr[0] //setting newArrival product
      
-          console.log(newArr)
+      
           var count;
           if (cartCount) { 
                count = cartCount.products.length;

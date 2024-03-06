@@ -1,5 +1,15 @@
 
 <style>
+  span{
+    font-weight: 500;
+   
+  }
+  input{
+    box-shadow: 1px 1px 1px black;
+  }
+  .addressbar{
+    width: 75%;
+  }
    .main{
     display: flex;
     flex-direction: row;
@@ -97,6 +107,12 @@ input[type=submit]:hover {
         align-items: center;
         justify-content: center;
     }
+    .add{
+     flex-direction: column;
+    }
+    .addressbar{
+      width: 100%;
+    }
     
    }
 </style>
@@ -169,45 +185,45 @@ input[type=submit]:hover {
 
 
     <div class="right">
-   <div class="container" style="display: flex;flex-direction: column;align-items: center; ">
+   <div class="" style="display: flex;flex-direction: column;align-items: center; ">
            {{!-- shipping adress --}}
-               <div style="width: 100%;;">
+               <div style="width: 100%;">
 
-             <input value="{{#if error}}ADDRESS ALREADY EXIST{{else}}ADD ADDRESS{{/if}}" class="" onclick="view()" id="lname"  style="width: 75%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;margin-left: 12%; text-align: center;margin-bottom: 30px;box-shadow: 1px 1px 10px grey;" >
+             <input value="{{#if error}}ADDRESS ALREADY EXIST{{else}}ADD ADDRESS{{/if}}" class="" onclick="view()" id="lname"  style="width: 75%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;margin-left: 12%; text-align: center;margin-bottom: 30px;box-shadow: 1px 1px 1px black;font-weight: 600;color: red;" >
 
 
                 </div>
            {{!-- shipping address --}}
 
-
-            
-    <form  action="/profile/address" style="width: 75%;" class="displaytoggle" id="shippingform" method="post">
+    <span id="adderr">{{error}} </span>
+           
+    <form  action="/profile/address" style="width:75%;" class="displaytoggle" id="shippingform" method="post">
     {{!-- firstname lastname --}}
-    <div style="display: flex;justify-content: space-between;">
+    <div class="add" style="display: flex;justify-content: space-between;">
      <div>
       <label for="fname">First Name</label>
-       <input type="text" id="afirstname" name="firstname" value="">
-       <span id="afirstnameErr" class="text-danger"></span>
+       <input type="text" id="firstname" name="firstname" value="">
+       <span id="firstnameErr" class="text-danger"></span>
      </div>
      <div>
 
        <label for="lname">Last Name</label>
-       <input type="text" id="alastname" name="lastname" >
-        <span id="alastnameErr" class="text-danger"></span>
+       <input type="text" id="lastname" name="lastname" >
+        <span id="lastnameErr" class="text-danger"></span>
      </div>
 
     </div>
     {{!-- firstname lastname --}}
  {{!-- address --}}
      <label >Address</label>
-    <input type="text" id="aaddress" name="address" >
-     <span id="aaddressErr" class="text-danger"></span>
+    <input type="text" id="addresss" name="address" >
+     <span id="addressErr" class="text-danger"></span>
      {{!-- address --}}
      {{!-- email --}}
    
       {{!-- email --}}
      {{!-- country state --}}
-      <div style="display: flex; justify-content: space-between;">
+      <div class="add" style="display: flex; justify-content: space-between;">
 
       <div>
 
@@ -234,13 +250,13 @@ input[type=submit]:hover {
 
 <div style="width: 100%;">
   <label >Email</label>
-    <input type="email" id="aemail" name="email" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;"  >
-    <span id="aemailErr" class="text-danger"></span>
+    <input  type="text" id="email" name="email" style="text-transform: lowercase; width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;"  >
+    <span id="emailErr" class="text-danger"></span>
 
 </div>
 {{!-- cityzipcode --}}
 
-<div style="display: flex; justify-content: space-between;">
+<div class="add" style="display: flex; justify-content: space-between;">
 
       <div>
 
@@ -255,9 +271,9 @@ input[type=submit]:hover {
       <div style="display: flex; flex-direction: column;">
       {{!-- zipcode --}}
 
-    <label id="zipcode">Zipcode</label>
-      <input type="number" name="zipcode" id="azipcode" style="height: 50px;border-radius: 3px;border: 1px solid grey; width: 250px;">
-      <span id="azipcoldeErr" class="text-danger"></span>
+    <label id="">Zipcode</label>
+      <input type="number" name="zipcode" id="zipcode" style="height: 50px;border-radius: 3px;border: 1px solid grey; width: 250px;">
+      <span id="zipcodeErr" class="text-danger"></span>
       </div>
       </div>
       {{!-- cityzipcode --}}
@@ -265,33 +281,13 @@ input[type=submit]:hover {
       {{!-- phonenumber --}}
       <div style="width: 100%;">
   <label >Phone Number</label>
-    <input type="number" id="aphonenumber" name="phonenumber" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;" >
-    <span id="aphonenumberErr" class="text-danger"></span>
+    <input type="number" id="phonenumber" name="phonenumber" style="width: 100%; height: 51px; border: 1px solid rgb(160, 150, 150);border-radius: 3px;" >
+    <span id="phonenumberErr" class="text-danger"></span>
 
 </div>
       
 {{!-- phone --}}
-    <div style="display: flex; flex-direction: column;">
-    
-    <span>Address Type</span>
-     <div>
-
-    <input type="radio" name="addresstype" id="" value="home"><span style="margin-left: 15px;">Home</span>
-     </div>
-     <div>
-
-    <input type="radio" name="addresstype" id="" value="work"><span style="margin-left: 15px;">Work</span>
-     </div>
-     <div>
-
-    <input type="radio" name="addresstype" id="" value="address-1"><span style="margin-left: 15px;">Address-1</span>
-     </div>
-     <div>
-
-    <input type="radio" name="addresstype" id="" value="address-2"><span style="margin-left: 15px;">Address-2</span>
-     </div>
-    </div>
-
+ 
    <div style="width: 100%;">
     <button type="submit" style="width: 100%; margin-top: 20px; height: 50px;background-color: red;margin-bottom: 10px;color: white;" class="btn " >Save Changes</button>
 
@@ -301,7 +297,7 @@ input[type=submit]:hover {
   
   {{!-- all address --}}
     {{#each address}}
-  <div style="width: 75%;height: 20%;border: 1px solid grey;margin-bottom: 20px; border-radius: 5px;padding: 10px;background-color: white;box-shadow: 1px 1px 10px grey;">
+  <div class="addressbar" style="height: 20%;border: 1px solid grey;margin-bottom: 20px; border-radius: 5px;padding: 10px;background-color: white;box-shadow: 1px 1px 5px black;">
     <div style="display: flex; justify-content: space-between;">
 
      <h3>{{this.addresstype}}</h3><span></span>
@@ -311,15 +307,17 @@ input[type=submit]:hover {
       <svg xmlns="http://www.w3.org/2000/svg" height="20" width="20" viewBox="0 0 512 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#fe1201" d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"/></svg>
       </a>
      
-      <a onclick="return confirm('are you sure want to delete {{this.addresstype}}')" href="/profile/delete-address?id={{this._id}}">
+      <a onclick="deleteCartProduct('{{this._id}}')" href="/profile/delete-address?id={{this._id}}">
      <svg xmlns="http://www.w3.org/2000/svg" height="20" width="17.5" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path fill="#f40101" d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"/></svg>
       </a>
      </div>
     </div>
-     <span>{{this.firstname}}{{this.lastname}}</span><br>
-     <span>{{this.address}}</span><br>
-     <span>{{this.state}}</span> &nbsp;&nbsp;<span>{{this.country}}</span>&nbsp;&nbsp;
-     <span>{{this.zipcode}}</span>&nbsp;&nbsp; <span>{{this.mobilenumber}}</span>
+     <h5 style="">{{this.firstname}}{{this.lastname}}</h5>
+     <span style="opacity: .8;">{{this.address}}</span><br>
+     <span  style="opacity: .8;">{{this.state}}</span> &nbsp;&nbsp;<span  style="opacity: .8;">{{this.country}}</span>&nbsp;&nbsp;
+     <span  style="opacity: .8;">{{this.zipcode}}</span>&nbsp;&nbsp; <span>{{this.mobilenumber}}</span><br>
+     <span  style="opacity: .8;">{{this.email}}</span><br>
+     <span  style="opacity: .8;">{{this.phonenumber}}</span>
   </div>
    {{/each}}
   {{!-- alladdress --}}
@@ -344,128 +342,133 @@ function view(){
 
 
 document.getElementById("shippingform").addEventListener("submit",function(e){
-  
- let firstname = document.getElementById("afirstname").value;
- let firstnameErr=document.getElementById("afirstnameErr")
 
- let lastname = document.getElementById("alastname").value;
- let lastnameErr = document.getElementById("alastnameErr");
+ let firstName = document.getElementById("firstname").value;
+ let firstNameErr=document.getElementById("firstnameErr")
+ let lastName = document.getElementById("lastname").value;
+ let lastNameErr = document.getElementById("lastnameErr");
 
- let email = document.getElementById("aemail").value;
- let emailErr = document.getElementById("aemailErr").value;
+ let email = document.getElementById("email").value;
+ let emailErr = document.getElementById("emailErr");
 
- let address = document.getElementById("aaddress").value;
- let addressErr = document.getElementById("aaddressErr")
+ let address = document.getElementById("addresss").value;
+ let addressErr = document.getElementById("addressErr")
 
- let phonenumber = document.getElementById("aphonenumber").value;
- let phonenumberErr = document.getElementById("aphonenumberErr");
+ let phoneNumber = document.getElementById("phonenumber").value;
+ let phoneNumberErr = document.getElementById("phonenumberErr");
 
- let zipcode = document.getElementById("azipcode").value;
+ let zipcode = document.getElementById("zipcode").value;
+console.log(zipcode,address)
+ let zipcodeErr = document.getElementById("zipcodeErr")
 
- console.log(phonenumber)
 
- if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(firstname)==true){
-        e.preventDefault()
-        firstnameErr.innerHTML = 'Special Charector not Allowed'
-      }
-    else{
-      firstnameErr.innerHTML = ''
-    }
-    if(/\d/.test(firstname)==true){
+
+ function firstnameError(msg){
+  e.preventDefault()
+  firstNameErr.innerHTML=msg
+} 
+
+function LastnameError(msg){
     e.preventDefault()
-     firstnameErr.innerHTML='Valid Firstname Is Required'
+  lastNameErr.innerHTML=msg
+}
+function emailError(msg){
+   e.preventDefault()
+  emailErr.innerHTML=msg
+}
+function addressError(msg){
+  e.preventDefault()
+  addressErr.innerHTML=msg
+}
 
-     }
-     else{
-      firstnameErr.innerHTML = ''
-     }
-       if(firstname===""){
-          e.preventDefault()
-     firstnameErr.innerHTML='Firstname Is Required'
-     }
-     else{
-       firstnameErr.innerHTML = ''
-     }
+function phonenumberError(msg){
+  e.preventDefault()
+  phoneNumberErr.innerHTML=msg
+}
+function zipcodeError(msg){
+  e.preventDefault()
+  zipcodeErr.innerHTML=msg
+}
+//firstname
+if(firstName==''){
+ firstnameError('Required')
 
-       if (firstname.length<=2&&firstname!==''){
-          e.preventDefault()
-     firstnameErr.innerHTML='Firstname Should be Above 2 Letters'
-     }
-     if(firstname.length>12){
-          e.preventDefault()
-     firstnameErr.innerHTML='Firstname Should be below 12 Letters'
-     } 
-     
+}
 
-     //lastname
+else if(firstName.length>10){
+ firstnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(firstName)){
+  firstnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(firstName)){
+  firstnameError('Number not allowed')
+}
+else{
+  firstNameErr.innerHTML=''
+}
 
-     if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(lastname)==true){
-        e.preventDefault()
-        lastnameErr.innerHTML = 'Special Charector not Allowed'
-      }
-    else{
-      lastnameErr.innerHTML = ''
-    }
-    if(/\d/.test(lastname)==true){
-    e.preventDefault()
-     lastnameErr.innerHTML='Valid lastname Is Required'
+//lastname;
+if(lastName==''){
+  LastnameError('Required')
+}
 
-     }
-     else{
-      lastnameErr.innerHTML = ''
-     }
-       if(lastname==''){
-          e.preventDefault()
-     lastnameErr.innerHTML='lastname Is Required'
-     }
-     else{
-       lastnameErr.innerHTML = ''
-     }
+else if(lastName.length>10){
+ LastnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(lastName)){
+  LastnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(lastName)){
+  LastnameError('Number not allowed')
+}
+else{
+  lastNameErr.innerHTML=''
+}
 
-       if (lastname.length<=2&&lastname!==''){
-          e.preventDefault()
-     lastnameErr.innerHTML='lastname Should be Above 2 Letters'
-     }
-     if(lastname.length>12){
-          e.preventDefault()
-     lastnameErr.innerHTML='lastname Should be below 12 Letters'
-     } 
-     
+//address
+if(email==''){
+  emailError('Required')
+}
+else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
+  emailError('Enter a valid email Address')
+}
+else{
+  emailErr.innerHTML=''
+}
 
-     //address
+//adress
+ if(address==''){
+  addressError('Required')
+}
+if(address.length<10){
+  addressError('Must be greaterthan 10 digit')
+}
 
-      if(/\d/.test(address)==true){
-    e.preventDefault()
-     addressErr.innerHTML='Valid Address Required'
+else{
+  addressErr.innerHTML=''
+} 
 
-     }
-       if(address.length<=15){
-          e.preventDefault()
-     addressErr.innerHTML='address Should be Above 15 Letters'
-     }
-       //email
+//phonenumber
 
-             if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
-    e.preventDefault()
-     emailErr.innerHTML='Valid Email Required'
+if(phoneNumber==''){
+  phonenumberError('Required')
+}
+else if(phoneNumber.length!=10){
+   phonenumberError('Must be 10 digit')
+}
+else{
+  phoneNumberErr.innerHTML=''
+}
+//zipcode
+if(zipcode==''){
+  zipcodeError('Required')
+}
+else{
+  zipcode=''
+}
 
-     }
-     if(email==""){
-      emailErr.innerHTML='Valid Email Required'
-     }
 
-     //phonenumber
-
-   
-      if(phonenumber.length!=10){
-        e.preventDefault();
-        phonenumberErr.innerHTML='10 numbers Required'
-      }
-      else{
-         phonenumberErr.innerHTML=''
-      }
-      
-   
 })
 
 
@@ -479,7 +482,7 @@ document.getElementById("shippingform").addEventListener("submit",function(e){
  {{!-- var user =document.querySelector(".userId").innerHTML;
  console.log(user) --}}
 {{!-- 
- fetch(`https://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
+ fetch(`http://localhost:3000/cart/address-exists?id=${user}`).then((data)=>{
   return data.json()
  })
 .then((res)=>{
@@ -503,6 +506,54 @@ document.getElementById("shippingform").addEventListener("submit",function(e){
 
   }
 }) --}}
+</script>
+
+<script>
+  
+</script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  
+async function deleteCartProduct(url){
+async function confirmDelete() {
+    return new Promise((resolve) => {
+        Swal.fire({
+            title: 'Are you sure?',
+           
+            icon: 'delete',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            customClass:{
+              popup:'custom'
+            }
+        }).then((result) => {
+            // Resolve the Promise with the user's choice
+            resolve(result.isConfirmed);
+        });
+    });
+}
+ let result =await confirmDelete()
+ if(result){
+  window.location.href = url
+ }
+
+
+}
+</script>
+<script>
+  let err = document.getElementById("adderr").innerText;
+  console.log(err)
+  if(err==='Email Already Exists'){
+  Swal.fire("Email Already Exists!");
+  }
+  if(err=='Address Already Exists'){
+      Swal.fire("Address Already Exists!");
+  }
+ 
+
 </script>
 
 

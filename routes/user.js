@@ -17,7 +17,7 @@ aboutControler)
 app.get("/user_home",verifyLogin,homeControler) 
 app.get("/user_login",loginControler)  
 app.get("/user_logout",logout)
-app.post("/user_login", 
+app.get("/userLogin", 
 
 loginPostControler)
 app.get("/user_signup",signupControler) 

@@ -361,23 +361,24 @@ margin: 20px;
 
                   <div class=" col-md-6 col-lg-6 col-sm-12 col-xl-6 ">
                      <label for="" >Product Name</label><br>
-                     <span class="text-danger" id="nameError"></span> <br>
+                     <span style="font-weight: 600;color: red;" class="" id="nameErr"></span> <br>
                      
-                     <input class="inpu" id="name" type="text" " name="name" required > 
+                     <input class="inpu" id="name" type="text" " name="name" > 
                   </div>
 
                   <div class=" col-md-6 col-lg-6 col-sm-12 col-xl-6 ">
                     <label for="">Price</label><br>
-                    <span class="text-danger" id="priceError"></span><br>
-                    <input id="price" type="number" " class="inpu" required name="price">
+                    <span style="font-weight: 600;color: red;" class="" id="priceErr"></span><br>
+                    <input id="price" type="number" " class="inpu"  name="price">
                   </div>
                   
                    <div class=" col-md-6 col-lg-6 col-sm-12 col-xl-6 ">
                      <label for="" >Description</label>
                      <br>
-                     <span id="descriptionError" class="text-danger"></span>
-                     <input class="inpu" type="text" " required name="description">
+                     <span id="descriptionErr" class="" style="font-weight: 600;color: red;"></span>
+                     <input class="inpu" type="text" id="description" name="description">
                    </div>
+                   
                   
                        <div class="dropdown col-md-6 col-lg-6 col-sm-12 col-xl-6 " >
                     <button class="dropbtn inpu" id="select-category" style="border: 1px solid#DBDBDB;width: 100%;margin-top: 10px;height: 54px;" >Select Category</button>
@@ -398,8 +399,8 @@ margin: 20px;
 
                       <label for=""">Quantity</label>
                 
-                       <input class="inpu" type="number"  name="" required id="quantity" onchange="changequantity()" style="">
-                       <br><span class="text-danger" id="quantityError"></span>
+                       <input class="inpu" type="number"  name=""  id="quantity" onchange="changequantity()" style="">
+                       <br><span class="" style="font-weight: 600;color: red;" id="quantityErr"></span>
                   
                        </div>
 
@@ -408,8 +409,8 @@ margin: 20px;
                      
                       <label>Status</label><br>
                      <select name="" class="inpu" id="status" onchange="changestatus()"  style="width: 100%;height: 50px;" >
-                      <option value="">select</option>
-                      <option value="Published">Published</option>
+                      <option value="" >select</option>
+                      <option value="Published" selected>Published</option>
                       <option value="Low of stock">Low of stock</option>
                       <option value="Out of stock">Out of stock</option>
                       <option value="Draft">Draft</option>
@@ -421,7 +422,7 @@ margin: 20px;
                        <div class="col-lg-4 col-sm-12 col-xl-4">
 
                      <label for="" ">Discount</label><br>
-                     <span id="discountError" class="text-danger"></span>
+                     <span id="discountErr" class="" style="font-weight: 600;color: red;"></span>
                       <input class="inpu" value="0" id="discount" type="number"  name="discount" style="width: 100%;margin-top: 0px;">
                        </div>
 
@@ -466,7 +467,7 @@ margin: 20px;
         <div style="margin-bottom: 0px;display: flex;flex-direction:column;justify-content: center;align-items: center;" class="col-xl-12">
 <img style="width: 100px;height: 100px;" id="img" src="data:image/png;base64,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" alt="" >
          
-           <input  style="width: 250px;" type="file" id="image" name="image" onchange="viewImage(event)" >
+           <input multiple style="width: 250px;" type="file" id="image" name="image" onchange="viewImage(event)" >
 
            
            
@@ -570,88 +571,136 @@ margin: 20px;
 
 
 
+{{!-- event listner --}}
 
-        var error = false;
-const form = document.getElementById('form');
-const name = document.getElementById('name');
-const discount= document.getElementById('discount');
-const price = document.getElementById('price');
-const  quantity = document.getElementById('quantity');
-const nameError = document.getElementById('nameError');
-const priceError = document.getElementById('priceError');
-
-const quantityError = document.getElementById('quantityError');
   form.addEventListener('submit',function(e){
-    {{!-- const pattern = /^[a-zA-Z0-9]+$/;
-    var numberPattern =/\d/ --}}
 
- 
 
-    {{!-- if(/\d/.test(name.value)){
-      e.preventDefault()
-       nameError.innerHTML='Invalid value'
-    }
-    if(pattern.test(name.value)){
-    }
-    else{
-       nameError.innerHTML='Invalid value'
-      e.preventDefault()
-      
-    } --}}
-    if(name.value.length>100){
-      nameError.innerHTML='Must be Lessthan 100 charecters'
-      e.preventDefault()
-    }
-    if(name.value.length<4){
-      nameError.innerHTML='Must be morethan 4 charecters'
-      e.preventDefault()
-    }
-    else{
-       nameError.innerHTML=''
-     
-    }
 
-{{!-- price validation --}}
+const name = document.getElementById('name').value
+const dis= document.getElementById('discount').value
+let discount=parseInt(dis)
+const pri = document.getElementById('price').value
+let price=pri;
+const  quantity = document.getElementById('quantity').value
+const  description = document.getElementById('description').value
 
-   if(price.value<=0){
+const nameErr = document.getElementById('nameErr');
+const priceErr = document.getElementById('priceErr');
+const descriptionErr = document.getElementById('descriptionErr');
+const quantityErr = document.getElementById('quantityErr');
+const discountErr = document.getElementById('discountErr');
+let category=document.getElementById('select-category')
+console.log(description)
 
-    priceError.innerHTML='Price should a positive number'
-    e.preventDefault()
-   }
-   else{
-        priceError.innerHTML=''
-   }
-   if(price.value.length>6){
-    priceError.innerHTML='Price should be less than 6 charecters'
-       e.preventDefault()
-   }
-   else{
-priceError.innerHTML=''
-   }
 
-   {{!-- quantity --}}
 
-    
-   if(quantity.value<0){
-    quantityError.innerHTML='Invalid Value'
-    e.preventDefault()
-   }
-   if(quantity.value>100){
-  quantityError.innerHTML='Quantity must be less than 100'
-    e.preventDefault()
-   }
-   else{
-      quantityError.innerHTML=''
-   }
+function nameError(msg){
+  e.preventDefault()
+  nameErr.innerHTML=msg
+}
+function descriptionError(msg){
+  e.preventDefault()
+  descriptionErr.innerHTML=msg
+}
 
-   if(discount.value>price.value){
-    discountError.innerHTML ='Discount should be lower than Price'
-    e.preventDefault
-   }
-   else{
-    discountError.innerHTML =''
-   }
-      
+function priceError(msg){
+  e.preventDefault()
+  priceErr.innerHTML=msg
+}
+
+function discountError(msg){
+  e.preventDefault()
+  discountErr.innerHTML=msg
+}
+
+function quantityError(msg){
+  e.preventDefault()
+  quantityErr.innerHTML=msg
+}
+
+
+{{!-- name --}}
+
+if(name==''){
+  nameError('Required')
+}
+else if(name.length<=4){
+nameError('minimum 4 charecter required')
+}
+else if(name.length>20){
+nameError('Maximum length exceeded')
+}
+else{
+  nameErr.innerHTML=''
+}
+
+{{!-- description --}}
+
+if(description==''){
+  descriptionError('Required')
+}
+
+else{
+  descriptionErr.innerHTML=''
+}
+
+{{!-- price --}}
+
+if(price==''){
+  priceError('Required')
+}
+else if(parseInt(price)<=0){
+   priceError('Price Must be greaterthan 0')
+}
+else if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\\-/]/g.test(price)){
+  priceError('Special charecter not allowed')
+}
+else if(parseInt(price)<parseInt(discount)){
+   priceError('Mustbe Greaterthan Discount')
+  
+}
+else if(price<500){
+   priceError('must be graterthan 500')
+  
+}
+
+else{
+  priceErr.innerHTML=''
+}
+
+
+{{!-- discount --}}
+console.log(typeof(discount),typeof(price))
+if(discount>price){
+  discountError("discount Must be Lowerthan Price")
+}
+else if(discount<0)
+discountError("Negetive value not allowed")
+else{
+  discountErr.innerHTML=''
+}
+
+
+if(quantity==''){
+  quantityError('Required')
+}
+else if(parseInt(quantity)>100){
+   quantityError('Quantity Limit Exceeded')
+}
+else{
+quantityErr.innerHTML=''
+}
+
+if(category.innerHTML=='Select Category'){
+  e.preventDefault()
+  category.style.color='red'
+}
+else{
+  category.style.color='white'
+}
+
+
   })
 
 

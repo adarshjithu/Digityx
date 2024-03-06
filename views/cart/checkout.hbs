@@ -140,54 +140,50 @@
                <input style="display: none;" type="text" id="addressError" value="{{noAddress}}">
                <span class="text-danger" style="font-weight: 600;margin-bottom: 20px;"> Address Not Found Add New Address or Select Another Address Type</span> {{/if}}
          <div style="box-shadow: 1px 1px 10px grey;">
+
+         {{#each address}}
+         <div style="display: flex;">
          <div class="col-xl-12 col-md-12" id="address" style="width: 100%;height: 30%;border: 1px solid red;background-color: white;border-radius: 5px;margin-bottom: 10px;display: flex;flex-direction: row;padding: 10px;">
-           <div class="l">
+           <div class="l" style="display: flex;flex-direction: column;justify-content: ;">
             <h6>Delivery To :</h6>
+          <input onchange="changeAddress('{{this._id}}')" {{#if home}}checked{{/if}} type="radio" name="address" id="" style="width: 20px;height: 20px;margin-top: 20px;">
             </div>
            <div class="r" style="margin-left: 20px;">
             <div style="display: flex;align-items: flex-start;">
               
-            <h6>{{address.firstname}}</h6>
+            <h6>{{this.firstname}}</h6>
             </div>
-            <h6>{{address.address}}</h6>
+            <h6>{{this.address}}</h6>
            <div style="display: flex;align-items: flex-start;">
               
 
-            <h6>{{address.country}},&nbsp;{{address.state}},&nbsp;{{address.city}}&nbsp;</h6>
+            <h6>{{this.country}},&nbsp;{{this.state}},&nbsp;{{this.city}}&nbsp;</h6>
             </div>
            <div style="display: flex;align-items: flex-start;">
               
 
-            <h6>{{address.zipcode}}&nbsp;,{{address.phonenumber}}</h6>
+            <h6>{{this.zipcode}}&nbsp;,{{this.phonenumber}}</h6>
             </div>
             </div>
          </div>
+         </div>
+         {{/each}}
+
          <div class="col-xl-12 col-md-12" id="address" style="width: 100%;max-height: 10%;border: 1px solid red;background-color: white;border-radius: 5px;margin-bottom: 10px;display: flex;align-items: flex-start;padding: 10px;min-height: 10%;">
           <a onclick="toggles()" style="color: red;font-weight: 700;"> + Add New Address</a>
          </div>
          {{!-- select category --}}
 
-         <div class="col-xl-12 col-md-12" id="address" style="width: 100%;max-height: 10%;border: 1px solid red;background-color: white;border-radius: 5px;margin-bottom: 10px;display: flex;align-items: flex-start;min-height: 10%;">
-                   <div class="col-md-4 mb-3">
-                <label for="state">
-                           <h6 onclick="toggles()" style="color: red;font-weight: 700;margin-top: 10px;"> Select Address</h6>
-                </label>
-                <select onchange="change()"  class="custom-select d-block w-100" id="add" style="border: 1px solid red;">
-                  <option value="">Choose..</option>
-                  <option value="home" >Home</option>
-                  <option value="work" >Work</option>
-                  <option value="address-1">Address-1</option>
-                  <option value="address-2">Address-2</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please provide a valid state.
-                </div>
-              </div>
-         </div>
+         
           </div>
 
+
+
+
+
+
           {{!-- checkout form --}}
-          <form  method="post" action="/cart/checkout" style="background-color: #DEE2E5;" id="AddressValidateForm">
+       <form action="/profile/updateAddress" method="post" id="AddressValidateForm">
           <div style="" class="shows" id="addr">
             <div class="row">
               <div class="col-md-6 mb-3">
@@ -205,9 +201,7 @@
                 <input style="border: 1px solid #f7464f;border-radius: 10px;" type="text"  id="lastname" placeholder="" value="{{address.lastname}}" name="lastname">
                 <span id="lastnameErr" style="color: red;font-weight: 600;"></span>
                  {{!-- lastname --}}
-                <div class="invalid-feedback">
-                
-                </div>
+            
               </div>
             </div>
            
@@ -218,7 +212,7 @@
             {{!-- address --}}
             <div class="mb-3">
               <label for="address">Address</label>
-              <input style="border: 1px solid #f7464f;border-radius: 10px;" class="address" value="{{address.address}}" type="text"  placeholder="" required name="address">
+              <input style="border: 1px solid #f7464f;border-radius: 10px;" class="address" value="{{address.address}}" type="text"  placeholder=""  name="address">
               <span id="addressErr" style="font-weight: 600;color: red;"></span>
              
           
@@ -229,23 +223,19 @@
               <div class="col-md-6 mb-3">
                 <label for="firstName">Email </label> 
                   {{!-- firstname --}}
-                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="email"  id="email" placeholder="" value="{{address.email}}"  name="email">
+                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="text"  id="email" placeholder="" value="{{address.email}}"  name="email">
                 <span id="emailErr" style="font-weight: 600;color: red;"></span>
                  {{!-- firstname --}}
-                <div class="invalid-feedback">
-                  Valid Email is required.
-                </div>
+               
               </div>
 
               <div class="col-md-6 mb-3">
                 <label for="lastName">Phone Number</label>
                 {{!-- lastname --}}
-                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="phonenumber"  id="phonenumber" placeholder="" value="{{address.phonenumber}}" name="number">
+                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="number"  id="phonenumber" placeholder="" value="{{address.phonenumber}}" name="number">
                 <span id="phonenumberErr" style="color: red;font-weight: 600;"></span>
                  {{!-- lastname --}}
-                <div class="invalid-feedback">
-                  Valid Phone Number is required.
-                </div>
+               
               </div>
             </div>
 
@@ -257,14 +247,12 @@
               {{!-- country --}}
               <div class="col-md-5 mb-3">
                 <label for="country">Country</label>
-                <select   class="custom-select d-block w-100" id="country" required name="country">
-                  <option value="{{#if address.country}}{{address.country}}{{else}}''{{/if}}">{{#if address.country}}{{address.country}}{{else}}Choose...{{/if}}</option>
-                  <option value="us">United States</option>
-                  <option value="india">India</option>
+                <select    class="custom-select d-block w-100" id="country" required name="country">
+                  <option value="" >Choose...</option>
+                  <option value="us" selected>United States</option>
+                  <option selected value="india">India</option>
                 </select>
-                <div class="invalid-feedback">
-                  Please select a valid country.
-                </div>
+               
               </div>
            {{!-- country --}}
            
@@ -272,13 +260,11 @@
               <div class="col-md-4 mb-3">
                 <label for="state">State</label>
                 <select name="state" class="custom-select d-block w-100" id="state" required>
-                  <option value="{{#if address.state}}{{address.state}}{{else}}''{{/if}}">{{#if address.state}}{{address.state}}{{else}}Choose...{{/if}}</option>
-                  <option value="kerala">Kerala</option>
+                  <option value="">Choose...</option>
+                  <option selected value="kerala">Kerala</option>
                   <option value="tamilnadu">Tamilnadu</option>
                 </select>
-                <div class="invalid-feedback">
-                  Please provide a valid state.
-                </div>
+              
               </div>
 
                {{!-- state --}}
@@ -286,11 +272,9 @@
                {{!-- zip --}}
               <div class="col-md-3 mb-3">
                 <label for="zip">Zip</label>
-                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="text"  id="zipcode" value="{{address.zipcode}}" placeholder="" name="zipcode">
+                <input style="border: 1px solid #f7464f;border-radius: 10px;" type="number"  id="zipcode" value="{{address.zipcode}}" placeholder="" name="zipcode">
                 <span id="zipcodeErr" style="color: red;font-weight: 600;"></span>
-                <div class="invalid-feedback">
-                  Zip code required.
-                </div>
+               
               </div>
 
 
@@ -301,20 +285,24 @@
 
 
             </div>
-            <hr class="mb-4">
+
             {{!-- address slection --}}
     
-              </div>
-
-        
-              <div style="display: flex;justify-content: center;display: none;" id="saveAddress" >
-          <input type="radio" name="save" id="cod"  value="true"  style="height:25px;width: 25px;margin-left: 20px;background-color: red;"   >
-                   <label for="" style="margin-left: 10px;">Save Address</label>
+              <div style="display: flex;justify-content: center;width: 100%;" id="" >
+                <button class="btn" style="background-color: red;color: white;width: 100%;margin-bottom: 10x;" type="submit">Save Address</button>
                    
                
               
            
             </div>
+              </div>
+
+        
+            </form>
+
+
+            {{!-- //////////////////////////////////// --}}
+               <form  method="post" action="/cart/checkout" style="background-color: #DEE2E5;" onsubmit="checkQuantity(event)" id="placeOrderForm" >
             <div style="background-color: white; border: 1px solid red;border-radius: 5px;">
 
             <h4 class="mb-3">Payment</h4>
@@ -346,6 +334,7 @@
 
            
             <hr class="mb-4">
+            <input type="text" name="chooseAddress" value="" id="chooseAddress" style="display:none ;">
             <input type="number" name="deliverycharge" id="del" style="display: none;">
             <input type="text" name="couponcode" id="couponcode" style="display: none;" >
             <input type="text" value="0" id="referalbonus" name="referaldiscount" style="display: none;">
@@ -354,7 +343,7 @@
             <input type="number" id="coupon" value="" style="display: none;" name="coupon">
             <input type="number" name="subtotal" id="s" value="" style="display: none;">
             <input type="number" name="discount" id="d" value="" style="display: none;">
-            <button class="btn btn-lg btn-block" type="submit" style="background-color: red;color: white;font-weight: 600;"> PLACE ORDER </button>
+            <button  id="checkoutButton" class="btn btn-lg btn-block" type="submit" style="background-color: red;color: white;font-weight: 600;"> PLACE ORDER </button>
           </form>
 
           {{!-- checkoutform --}}
@@ -403,7 +392,7 @@
 
 
 <script>
-     fetch('https://digityx.shop/cart/cartcount').then((res)=>{
+     fetch('http://localhost:3000/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             {{!-- document.getElementById("items").innerHTML = data.count ; --}}
@@ -461,7 +450,7 @@ if(onlinepayment){
 
 function change(e){
  const value = document.getElementById("add").value
-  fetch(`https://digityx.shop/cart/checkout-change-address?type=${value}`).then((res)=>{
+  fetch(`http://localhost:3000/cart/checkout-change-address?type=${value}`).then((res)=>{
     return res.json()
   }).then((data)=>{
     location.reload()
@@ -471,7 +460,7 @@ function change(e){
 
 
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   function toggle(){
     document.getElementById('ul').classList.toggle("ul")
@@ -491,14 +480,15 @@ function change(e){
 document.getElementById('t').value=parseInt(total)-parseInt( discountPrice)
 document.getElementById("offer").innerHTML=parseInt(document.getElementById("offer").innerHTML)+parseInt(discountPrice)
 document.getElementById("coupon").value=discountPrice
-    alert(`YOU WON ${discountPrice} DISCOUNT`)
+ Swal.fire(`YOU WON ${discountPrice} DISCOUNT`);
+    
           document.getElementById("total").innerHTML=total-discountPrice
           document.getElementById("couponcode").value = couponCode
           
           document.getElementById(`${couponId}`).style.display='none'
        
          
-      fetch(`https://digityx.shop/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`)
+      fetch(`http://localhost:3000/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`)
   
     
     
@@ -517,17 +507,21 @@ document.getElementById("coupon").value=discountPrice
   console.log(addressError)
 
   if(addressError){
-    alert("Address Not Found")
+   Swal.fire("Address Not Found!");
+   document.getElementById('checkoutButton').disabled=true
   }
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
   document.getElementById("AddressValidateForm").addEventListener('submit',function(e){
-
+   e.preventDefault()
+  let user = {{{user}}}
+     const state = document.getElementById('state').value
+     const country = document.getElementById('country').value
      const firstName = document.getElementById("firstname").value;
      const firstNameErr = document.querySelector(".firstnameErr");
-     const Lastname = document.getElementById("lastname").value;
+     const lastName = document.getElementById("lastname").value;
      const LastnameErr = document.getElementById("lastnameErr");
      const address = document.querySelector(".address").value;
      const addressErr = document.getElementById("addressErr")
@@ -537,145 +531,178 @@ document.getElementById("coupon").value=discountPrice
      const phoneNumberErr = document.getElementById("phonenumberErr")
      const zipcode = document.getElementById("zipcode").value;
      const zipcodeErr = document.getElementById("zipcodeErr")
-
-     console.log(email)
-     //firtname
-      if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(firstName)==true){
-        document.getElementById("addr").classList.remove('shows')
-        e.preventDefault()
-        firstNameErr.innerHTML = 'Special Charector not Allowed'
-      }
-     if(/\d/.test(firstName)==true){
-      document.getElementById("addr").classList.remove('shows')
-    e.preventDefault()
-     firstNameErr.innerHTML='Valid Firstname Is Required'
-
-     }
-     if(firstName===""){
-      document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     firstNameErr.innerHTML='Firstname Is Required'
-     }
+  
+    let error=false;
      
-   
-      else if (firstName.length<=2&&firstName!==''){
-        document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     firstNameErr.innerHTML='Firstname Should be Above 2 Letters'
+     //functions
+
+     function firstNameError(msg){
+      e.preventDefault()
+      firstNameErr.innerHTML=msg
+      error=true
      }
-     if(firstName.length>12){
-      document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     firstNameErr.innerHTML='Firstname Should be below 12 Letters'
+     function lastNameError(msg){
+      e.preventDefault()
+      LastnameErr.innerHTML=msg
+      error=true
+     }
+     function addressError(msg){
+      e.preventDefault()
+      addressErr.innerHTML=msg
+      error=true
+     }
+     function phoneNumberError(msg){
+      e.preventDefault()
+      phoneNumberErr.innerHTML=msg;
+      error=true
+     }
+     function zipcodeError(msg){
+      e.preventDefault()
+      zipcodeErr.innerHTML=msg
+      error=true
+     }
+    function emailError(msg){
+      e.preventDefault()
+      emailErr.innerHTML=msg
+      error=true
      } 
-     //lastname
-       if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(Lastname)==true){
-        document.getElementById("addr").classList.remove('shows')
-        e.preventDefault()
-        LastnameErr.innerHTML = 'Special Charector not Allowed'
-      }
-     
-     if(/\d/.test(Lastname)==true){
-      document.getElementById("addr").classList.remove('shows')
-    e.preventDefault()
-     LastnameErr.innerHTML='Valid Lastname Is Required'
 
+
+///firstname
+     if(firstName==''){
+      firstNameError('Required');
      }
-     if(Lastname.length<=2){
-      document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     LastnameErr.innerHTML='Lastname Should be Above 2 Letters'
-     }else{
-         LastnameErr.innerHTML=''
+     else if(/[^a-zA-Z0-9\s]/.test(firstName)){
+          firstNameError("Special Character not allowed")
      }
-     if(Lastname.length>12){
-      document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     LastnameErr.innerHTML='Lastname Should be below 12 Letters'
+     else if(/[0-9]/.test(firstName)){
+           firstNameError('Numbers Not allowed')
      }
-     if(Lastname==''){
-      document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     LastnameErr.innerHTML='Lastname Is Required'
+     else if(firstName.length<6){
+      firstNameError('Must be 6 above character')
+     }
+     else{
+      firstNameErr.innerHTML=''
+     }
+//lastname
+if(lastName==''){
+  lastNameError('Required')
+}
+ else if(/[^a-zA-Z0-9\s]/.test(lastName)){
+          lastNameError("Special Character not allowed")
+     }
+      else if(/[0-9]/.test(lastName)){
+           lastNameError('Numbers Not allowed')
+     }
+ 
+     else if(lastName.length>10){
+        lastNameError('Maximum 10 allowed')
+     }
+     else{
+      LastnameErr.innerHTML=''
      }
 
      //address
+   if(address==''){
+   
+    addressError('Required')
+   }
+   else if(address.length<10){
+         addressError('Minimum 10 Charactor required')
+   }
  
-         if(/\d/.test(address)==true){
-          document.getElementById("addr").classList.remove('shows')
-    e.preventDefault()
-     addressErr.innerHTML='Valid Address Required'
+   else{
+    address.innerHTML=''
+   } 
 
-     }
-       if(address.length<=15){
-        document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-     addressErr.innerHTML='address Should be Above 15 Letters'
-     }
+   //phonenumber
 
-    //email
-      if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
-        console.log('email. ceer')
-        document.getElementById("addr").classList.remove('shows')
-    e.preventDefault()
-     emailErr.innerHTML='Valid Email Required'
+   if(phonenumber==''){
+    phoneNumberError('Required')
+   }
+   else if(phonenumber.length!=10){
+    phoneNumberError('Must be 10 Digit')
+   }
+   else{
+    phoneNumberErr.innerHTML=''
+   }
 
-     }
-    
-  //phonenumber
+   //zipcode
 
-        if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(phonenumber)==true){
-          document.getElementById("addr").classList.remove('shows')
-        e.preventDefault()
+   if(zipcode==''){
+    zipcodeError("Required")
+   }
+   else{
+    zipcodeErr.innerHTML=''
+   }
+   //email
 
-        phoneNumberErr.innerHTML = 'Special Charector not Allowed'
-      }
-      if(phonenumber.length!==10){
-        document.getElementById("addr").classList.remove('shows')
-        e.preventDefault();
-        phoneNumberErr.innerHTML='10 numbers Required'
-      }
-      else{
-         phoneNumberErr.innerHTML=''
-      }
-      
-   if(/^\d+$/.test(phonenumber)!==true){
-        document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-        phoneNumberErr.innerHTML = 'Invalid Value'
-      }
-      else{
-         zipcodeErr.innerHTML = ''
-      }
-    
-        //zipcode
-   if(/[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]/.test(zipcode)==true){
-    document.getElementById("addr").classList.remove('shows')
-        e.preventDefault()
-        zipcodeErr.innerHTML = 'Special Charector not Allowed'
-      }
-      else{
-         zipcodeErr.innerHTML = ''
-      } 
+   if(email==''){
+    emailError('Required')
+   }
+   else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
+    emailError('Enter Valid Email Address')
+   }
+   else{
+    emailErr.innerHTML=''
+   }
 
-      if(/^\d+$/.test(zipcode)!==true){
-        document.getElementById("addr").classList.remove('shows')
-          e.preventDefault()
-        zipcodeErr.innerHTML = 'Invalid Value'
+  if(error==false){
+
+      fetch('http://localhost:3000/profile/updateAddress',{
+      method:'POST',
+      headers:{
+      'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        user:user,
+        firstname:firstName,
+        lastname:lastName,
+        email:email,
+        address:address,
+        zipcode:zipcode,
+        phonenumber:phonenumber,
+        city:"calicut",
+        state:state,
+        country:country
+
+
+      })
+     }).then(async(result)=>{
+      return result.json()
+     }).then((data)=>{
+      console.log(data)
+      if(data.success==true){
+        //swal
+       Swal.fire({
+  position: "top",
+  icon: "success",
+  title: "Your work has been saved",
+  showConfirmButton: false,
+  timer: 1500
+});
+setTimeout(()=>{
+location.reload()
+},1500)
+ 
       }
-      else{
-         zipcodeErr.innerHTML = ''
+
+      else if(data.success==false){
+Swal.fire(`${data.error}`);
+
       }
-    
-  })
-</script>
+     })
+  } 
+
+})
+</script> 
 
 
 <script>
  var user =document.querySelector(".userId").innerHTML;
  console.log(user)
 
- fetch(`https://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
+ fetch(`http://localhost:3000/cart/address-exists?id=${user}`).then((data)=>{
   return data.json()
  })
 .then((res)=>{
@@ -706,7 +733,7 @@ document.getElementById("coupon").value=discountPrice
       const total = document.getElementById("total").innerHTML;
       console.log(total)
     const id   = document.getElementById("referalcode").value;
-     fetch(`https://digityx.shop/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
+     fetch(`http://localhost:3000/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
       return result.json()
      }).then((data)=>{
       console.log(data)
@@ -717,6 +744,65 @@ document.getElementById("coupon").value=discountPrice
       document.getElementById("referal").value = id;
      })
 
+  }
+</script>
+<script>
+  function changeAddress(id){
+    document.getElementById("chooseAddress").value=id
+    fetch(`http://localhost:3000/profile/changeAddress?id=${id}`)
+  }
+</script>
+
+
+<script>
+  function checkQuantity(e){
+    e.preventDefault()
+
+
+    fetch('http://localhost:3000/cart/checkCheckout').then((result)=>{
+      return result.json()
+    }).then((data)=>{
+    
+        console.log(data)
+        if(data.success==true){
+          console.log('dasdfuasdf')
+          document.getElementById('placeOrderForm').submit()
+        }
+        else{
+         Swal.fire({
+  title: "OUT OF STOCK",
+  text: `${data.result}`,
+  icon: "warning",
+  showCancelButton: true,
+  confirmButtonColor: "#3085d6",
+  cancelButtonColor: "#d33",
+  confirmButtonText: "Yes, delete it!"
+}).then((result) => {
+  if (result.isConfirmed) {
+//deleting cart
+
+fetch('http://localhost:3000/cart/updateCart').then(()=>{
+  Swal.fire({
+  position: "top",
+  icon: "success",
+  title: "Successfully Deleted",
+  showConfirmButton: false,
+  timer: 2000
+});
+
+setTimeout(()=>{
+ location.reload()
+},1500)
+})
+    
+  
+  }
+});
+        }
+    })
+
+
+   
   }
 </script>
 

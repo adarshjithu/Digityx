@@ -458,6 +458,9 @@ const productsFilter = asyncHandler(async (req, res) => {
 //const deleteImage ----------------------------------------------------------------------------
 
 const deleteImage = asyncHandler(async (req, res) => {
+   
+    console.log(req.query)
+     console.log('called')
      if (req.query.type == "main") {
           await productCollection.updateOne(
                { _id: req.query.proId },

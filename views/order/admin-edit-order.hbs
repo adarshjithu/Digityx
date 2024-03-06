@@ -370,7 +370,7 @@
 {{!-- tracking --}}
                        <div class="cancel">
                         <div class="dropdown">
-                            <a href="/order/admin-view-orders" style="color: white;" class="btn btn-success">Go Back</a><br>
+                            <a href="/order/admin-view-orders" style="color: white;" class="btn btn-primary">Update</a><br>
                            
       <style>
 .dropdown {
@@ -618,7 +618,7 @@
     }
 
     console.log(orderId)
-  fetch(`https://digityx.shop/order/change-order-status?id=${orderId}&&status=${arg}`)
+  fetch(`http://localhost:3000/order/change-order-status?id=${orderId}&&status=${arg}`)
   location.reload()
   }
 

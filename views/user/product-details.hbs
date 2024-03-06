@@ -556,7 +556,7 @@ $(document).ready(function () {
 
   function addtocart(proId){
     console.log(proId)
-    fetch(`https://digityx.shop/cart/addtocart?proId=${proId}`).then(function(res){
+    fetch(`http://localhost:3000/cart/addtocart?proId=${proId}`).then(function(res){
      return res.json()
      
   }).then((data)=>{

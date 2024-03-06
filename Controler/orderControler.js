@@ -13,8 +13,8 @@ const adminViewOrder = asyncHandler(async (req, res) => {
           
      
      
-     var order = await orderCollection.find({}).lean()
-     var orders = order
+     var orders = await orderCollection.find({user:{$exists:true}}).sort({_id:-1}).lean()
+
    
      
      //         ,{
@@ -76,11 +76,11 @@ const adminViewOrder = asyncHandler(async (req, res) => {
 
      // ]);
 
-     res.render("order/admin-view-order", { orders, });
+     res.render("order/admin-view-order", {orders});
      console.log(orders[0].products)
      }
      catch(error){
-        
+           console.log(error)
           var err = new Error();
           error.statusCode = 400;
           next(err)
@@ -204,9 +204,19 @@ const userOrderCancelSelectPayment = asyncHandler(async (req, res) => {
           console.log(req.query.id,'orderId',)
      
           const order = await orderCollection.findOne({_id:req.query.id}).lean()
-          console.log('order',order)
+          console.log('order',order.products)
+          let proData=order.products;
          //order is cash on delivery
            if(order.payment=='COD'){
+
+               for(let i of proData){
+                    await productCollection.updateOne({_id:i.item},{
+                         $inc:{
+                              quantity:i.count
+                         }
+                    })
+               }
+               
                res.render('order/order-cancelled')
                await orderCollection.findByIdAndUpdate({_id:req.query.id},{
                     status:'Cancelled'
@@ -238,15 +248,24 @@ const userOrderCancelSelectPayment = asyncHandler(async (req, res) => {
 
 const cancelConfirmControler = asyncHandler(async(req,res)=>{
      try{
+          let order = await orderCollection.findOne({_id:req.query.orderId});
+          let amount = parseInt(order.total)
 
           let transactionId ='#'+Math.floor(Math.random()*100000000);
           let date = new Date().toDateString()
-          var amount = parseInt(req.query.id)
-          
+         
+          let proData = order.products;
        
          if(req.body.money=='giftCardWallet'){
+          for(let i of proData){
+               await productCollection.updateOne({_id:i.item},{
+                    $inc:{
+                         quantity:i.count
+                    }
+               })
+          }
              const walletFind = await walletCollection.findOne({user:req.session.user._id});
-     
+             
             //wallet find
              if(walletFind){
                     const walletAmount = walletFind.amount+amount
@@ -340,15 +359,25 @@ const orderReturnTypeSelection = asyncHandler(async(req,res)=>{
 
 const userOrderReturnTypepost=asyncHandler(async(req,res)=>{
      try{
+console.log(req.query.orderId,'orderId')
 
+          let order=await orderCollection.findOne({_id:req.query.orderId})
           let transactionId ='#'+Math.floor(Math.random()*100000000);
           let date = new Date().toDateString()
-          var amount = parseInt(req.query.id)
-          
-       
+          var amount = parseInt(order.total)
+          proData =order.products;
          if(req.body.money=='giftCardWallet'){
+
+
              const walletFind = await walletCollection.findOne({user:req.session.user._id});
      
+             for(let i of proData){
+                  await productCollection.updateOne({_id:i.item},{
+                       $inc:{
+                            quantity:i.count
+                       }
+                  })
+             }
             //wallet find
              if(walletFind){
                     const walletAmount = walletFind.amount+amount
@@ -408,6 +437,7 @@ const userOrderReturnTypepost=asyncHandler(async(req,res)=>{
 //invoice----------------------------------------------------------------------------
 
 const orderInvoiceControler = asyncHandler(async(req,res)=>{
+     
 const order = await orderCollection.findOne({_id:req.query.id})
 var easyinvoice = require('easyinvoice');
 let pro = order.products

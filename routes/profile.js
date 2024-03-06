@@ -2,7 +2,7 @@ const express = require('express');
 const app = express.Router();
 const {verifyLogin}= require("../middlewares/middleware");
 const { upload} = require('../config')
-const {profileAddressControler, profileAddressPostControler, deleteAddress, editAddress, editAddressPost, accountDetails, accountDetailsPost, profileChangeImage, profileIconControler, walletControler}= require("../Controler/profileControler")
+const {profileAddressControler, profileAddressPostControler, deleteAddress, editAddress, editAddressPost, accountDetails, accountDetailsPost, profileChangeImage, profileIconControler, walletControler, changeAddress, checkoutChangeAddress, removeTrans}= require("../Controler/profileControler")
  
  
 
@@ -15,5 +15,8 @@ app.get('/account-details',verifyLogin,accountDetails);
 app.post('/account-details',verifyLogin,accountDetailsPost);
 app.post("/change-image",upload.single('image'),profileChangeImage);
 app.get("/profile-icon",verifyLogin,profileIconControler);
-app.get("/wallet",verifyLogin,walletControler)
+app.get("/wallet",verifyLogin,walletControler);
+app.get('/changeAddress',changeAddress)
+app.post("/updateAddress",checkoutChangeAddress);
+app.get("/removeTrans",removeTrans)
 module.exports = app;

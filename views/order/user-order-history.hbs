@@ -16,6 +16,12 @@
     background-color: white;
 
    }
+     #proName{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+   }
 
    .right{
     margin-top: 20px;
@@ -99,17 +105,19 @@
    @media only screen and  (max-width:750px){
     .ul li a span{
         display:none;
+        
     }
     .ul li a{
         display: flex;
         align-items: center;
         justify-content: center;
     }
+    #proName{
+        display: none;
+    }
     
    }
-   #proName{
-    display: none;
-   }
+
 </style>
 
 
@@ -211,7 +219,7 @@
                 
             <div class="sub">
 
-            <div class="img" style="">
+            <div class="img" style="display: flex;justify-content: center;align-items: center;">
                 
                 <img class="proimg" src="/assets/products/{{this.product.image}}" alt="">
             </div>
