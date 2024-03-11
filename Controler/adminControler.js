@@ -541,7 +541,7 @@ const adminEditProductPost = asyncHandler(async (req, res) => {
           req.body.quantity = req.body.quantity[0];
           console.log(req.body);
 
-          var convertDiscount = (parseInt(req.body.price) * parseInt(req.body.offerDiscount)) / 100 - parseInt(req.body.discount);
+          var convertDiscount = (parseInt(req.body.price) * parseInt(req.body.offerDiscount)) / 100 + parseInt(req.body.discount);
           var totalDiscount = Math.floor(convertDiscount);
           req.body.totalDiscount = totalDiscount;
           req.body.discountedPrice = parseInt(req.body.price) - totalDiscount;

@@ -9,6 +9,7 @@ const Razorpay = require("razorpay");
 const paymentCollection = require("../models/paymentModel");
 const couponCollection = require('../models/couponModel');
 const productsCollection = require('../models/productModel');
+const walletCollection = require('../models/walletModel')
 const { checkoutProductChecking } = require("../middlewares/middleware");
 const razorpay = new Razorpay({
      key_id: "rzp_test_REpsQUqylPJZxt",
@@ -433,8 +434,13 @@ const cartCount = asyncHandler(async (req, res,next) => {
 
 const  checkoutControler = asyncHandler(async (req, res) => {
     
-    
+      let walletTotal=0;
+      //wallet total for eligiblty checking
+     let wallet= await walletCollection.findOne({user:req.session.user._id})
+     if(wallet){
 
+          walletTotal  =  JSON.stringify(wallet.amount);
+     }
      let user = JSON.stringify(req.session.user._id)
      // checkoutProductChecking()
      try {
@@ -476,7 +482,7 @@ const  checkoutControler = asyncHandler(async (req, res) => {
                {
                     $project: {
                          item: 1,
-                         count: 1,
+                         count: 1, 
                          product: 1,
                          total: { $multiply: ["$count", "$product.price"] },
                     },
@@ -563,7 +569,7 @@ const  checkoutControler = asyncHandler(async (req, res) => {
           const userId = req.session.user._id;
          
           //////////////////////////////
-          res.render("cart/checkout", { home: true, cart, address,coupon ,userId,noAddress,user});
+          res.render("cart/checkout", { home: true, cart, address,coupon ,userId,noAddress,user,walletTotal});
      }  
      } 
      catch(error){
@@ -580,10 +586,12 @@ const  checkoutControler = asyncHandler(async (req, res) => {
 
 const checkoutPostControler = asyncHandler(async (req, res) => {
     
+    
+     
 
     //selecting the address for checkout
     let address = await addressCollection.findOne({$and:[{user:req.session.user._id},{home:true}]});
-    console.log(address,'adfsdfasdfsdfasdfasd')
+
     //seting address to body
     req.body.firstname=address.firstname
     req.body.lastname=address.lastname
@@ -714,7 +722,7 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
      }
 //----------------------------------------------------------------------------------
      //PAYMENT IS RAZORPAY
-     else  {
+     else if(req.body.payment=='online'){
           const orderObj = {
                user: req.session.user._id,
                address: {
@@ -777,6 +785,72 @@ const checkoutPostControler = asyncHandler(async (req, res) => {
                          console.log(error);
                     }
                });
+     }
+
+     //wallet payment--------------------------------------------------------------------
+     else{
+          const orderObj = {
+               user: req.session.user._id,
+               address: {
+                    firstname: req.body.firstname,
+                    lastname: req.body.lastname,
+                    address: req.body.address,
+                    email: req.body.email,
+                    phonenumber: req.body.number,
+                    country: req.body.country,
+                    state: req.body.state,
+                    zipcode: req.body.zipcode,
+               },
+               payment: req.body.payment,
+               total: req.body.total,
+               subtotal: req.body.subtotal,
+               discount: req.body.discount,
+               referalCode:req.body.referal,
+               referalDiscount:req.body.referaldiscount,
+               couponId: "",
+               deliveryCharge:req.body.deliverycharge,
+               
+               products: cart,
+               productsCount: product.products.length,
+               couponCode:req.body.couponcode,
+               coupon:req.body.coupon
+          };
+          await orderCollection.create(orderObj);
+         
+          const orderObject = await orderCollection.findOne(orderObj);
+          //payment object to store in payment collections
+          req.session.orderId=orderObject._id;
+          const paymentObj = {
+               order: '',
+               type: "Wallet",
+               orderDetails:orderObject._id ,
+          };
+          //saving payment details to payment collection
+
+          await paymentCollection.create(paymentObj);
+          if(req.session.singleProduct){
+               let user = await cartCollection.updateOne(
+                    { user: req.session.user },
+                    {
+                         $pull: { products: { item: req.session.singleProduct } },
+                    }
+               );
+               req.session.singleProduct=null;
+          }
+          else{
+              
+
+          }
+          res.redirect("/cart/order-success");
+
+          //checking is there enough wallet amount exists
+        
+          //else redirect to the checkout page
+        
+       
+
+ 
+
      }
 }
      catch(error){
@@ -848,6 +922,20 @@ const OrderSuccess = asyncHandler(async(req,res)=>{
      try{
 
           let data =  await orderCollection.findOne({_id:req.session.orderId});
+          console.log(data,'this is data')
+          //checking coupon 
+          if(data.couponCode==''){
+
+          }
+          else{
+               await couponCollection.updateOne(
+                    {couponcode:data.couponCode},
+                    {
+                         $push: { users: req.session.user._id },
+                    }
+               );
+          }
+         
           const totalAmout = data.total;
           let coupon = await couponCollection.find({}).lean()
           let cart = await cartCollection.findOne({user:req.session.user._id});
@@ -863,12 +951,41 @@ const OrderSuccess = asyncHandler(async(req,res)=>{
               })
               console.log(data)
           }
+          //checking wallet payment or not
+          if(data.payment=='Wallet'||data.payment=='wallet'){
+               let transactionId ='#'+Math.floor(Math.random()*100000000);
+               //decrement the total amount by total purchase amount
+               let total = data.total
+               await walletCollection.updateOne({user:req.session.user._id},{
+                    $inc:{
+                         amount:`-${total}`
+                    }
+               })
+
+               let walletObj={
+
+               }
+               ////adding transaction history
+               await walletCollection.updateOne({user:req.session.user._id},{$push:{transactions:{
+                    transactionId:transactionId,
+                    date:new Date().toDateString(),
+                    status:'Debit',
+                    description:'Bought Products',
+                    amount:total,
+                    
+
+                
+
+               }}})
+
+
+          }
 
           await cartCollection.deleteOne({user:req.session.user._id})
            res.render("cart/order-success")
      }
      catch(error){
-          console.log(error.message);
+          console.log(error);
           var err = new Error();
           error.statusCode = 400;
           next(err)
@@ -1002,6 +1119,20 @@ console.log('out of stcollasdasdfasdfasdf',outOfStock)
 }
 res.json({success:true})
 })
+
+//////implementing buy now of a products 
+
+
+const buyNow = asyncHandler(async(req,res)=>{
+     console.log(req.query)
+
+     await cartCollection.updateOne({user:req.session.user._id},{
+          $set:{
+               products:[{item:req.query.id,count:1}]
+          }
+     })
+})
+////////////////////////////////////////////////////////////////////////////////////////////
 module.exports = {
      addToCart,
      cartControler,
@@ -1017,5 +1148,6 @@ module.exports = {
      addressExistsControler,
      singleProduct,
      checkCheckout,
-     updateCart
+     updateCart,
+     buyNow
 };

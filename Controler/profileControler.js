@@ -31,12 +31,12 @@ const profileAddressPostControler = asyncHandler(async (req, res) => {
          let emailexists = await AddressCollection.find({email:req.body.email});
       
          let addressexists = await AddressCollection.find({address:req.body.address});
-         if(emailexists.length>0){
+     //     if(emailexists.length>0){
           
-          addressError='Email Already Exists'
-          res.redirect(`/profile/address?error=${addressError}`)
-         }
-         else if(addressexists.length>0){
+     //      addressError='Email Already Exists'
+     //      res.redirect(`/profile/address?error=${addressError}`)
+     //     }
+         if(addressexists.length>0){
           addressError='Address Already Exists'
           res.redirect(`/profile/address?error=${addressError}`)
          }
@@ -268,12 +268,12 @@ const checkoutChangeAddress = asyncHandler(async(req,res)=>{
      let emailexists = await AddressCollection.find({email:req.body.email});
       
      let addressexists = await AddressCollection.find({address:req.body.address});
-     if(emailexists.length>0){
+     // if(emailexists.length>0){
       
-      addressError='Email Already Exists'
-      res.json({success:false,error:addressError})
-     }
-     else if(addressexists.length>0){
+     //  addressError='Email Already Exists'
+     //  res.json({success:false,error:addressError})
+     // }
+      if(addressexists.length>0){
       addressError='Address Already Exists'
       res.json({success:false,error:addressError})
      }

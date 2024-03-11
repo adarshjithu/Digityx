@@ -618,7 +618,7 @@
     }
 
     console.log(orderId)
-  fetch(`https://digityx.shop/order/change-order-status?id=${orderId}&&status=${arg}`)
+  fetch(`http://localhost:3000/order/change-order-status?id=${orderId}&&status=${arg}`)
   location.reload()
   }
 

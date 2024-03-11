@@ -186,25 +186,33 @@
 
 
             <div class="col-xl-8">
-                <form action="/profile/account-details" method="post">
+                <form action="/profile/account-details" method="post"  id="profileSubmitForm">
                 <div class="row">
                     <div class="col-xl-6">
-                        <label for="">Firstname</label>
-                        <input class="inp" type="text" name="firstname" id="" value="{{account.firstname}}">
-                        <label for="">Username</label>
-                        <input class="inp" type="text" name="username" id="" value="{{account.username}}">
-                        <label for="">Secondary Mobile</label>
-                        <input class="inp" type="number" name="secondaryphonenumber" id="" value="{{account.secondaryphonenumber}}">
+                        <label for="">Firstname</label><br>
+                        <small id="firstnameErr" class="text-danger"></small>
+                        <input class="inp" type="text" name="firstname" id="firstname" value="{{account.firstname}}">
+
+                        <label for="">Username</label><br>
+                        <small id="usernameErr" class="text-danger"></small>
+                        <input class="inp" type="text" name="username" id="username" value="{{account.username}}">
+
+                        <label for="">Secondary Mobile</label><br>
+                        <small id="secondaryphonenumberErr" class="text-danger"></small>
+                        <input class="inp" type="number" name="secondaryphonenumber" id="secondaryphonenumber" value="{{account.secondaryphonenumber}}">
                     </div>
                     <div class="col-xl-6">
-                        <label for="">Lastname</label>
-                        <input class="inp" type="text" name="lastname" id="" value="{{account.lastname}}">
+                        <label for="">Lastname</label><br>
+                        <small id="lastnameErr" class="text-danger"></small>
+                        <input class="inp" type="text" name="lastname" id="lastname" value="{{account.lastname}}">
                         
-                        <label for="">Email &nbsp;&nbsp;&nbsp;&nbsp;</label>
-                        <input class="inp" type="email" name="email" id="" value="{{account.email}}">
+                        <label for="">Email &nbsp;&nbsp;&nbsp;&nbsp;</label><br>
+                        <small id="emailErr" class="text-danger"></small>
+                        <input class="inp" type="email" name="email" id="email" value="{{account.email}}">
                         
-                        <label for="">Phone Number</label>
-                        <input class="inp" type="number" name="phonenumber" id="" value="{{account.phonenumber}}">
+                        <label for="">Phone Number</label><br>
+                        <small id="phonenumberErr" class="text-danger"></small>
+                        <input class="inp" type="number" name="phonenumber" id="phonenumber" value="{{account.phonenumber}}">
                         
 
                     </div>
@@ -212,16 +220,19 @@
                 <div class="row">
 
                     <div class="col-xl-4">
-                        <label for="">Country</label>
-                      <input class="inp" style="width: 80%;" type="text" name="country" id="" value="{{account.country}}">
+                        <label for="">Country</label><br>
+                        <small id="countryErr" class="text-danger"></small>
+                      <input class="inp" style="width: 80%;" type="text" name="country" id="country" value="{{account.country}}">
                     </div>
                     <div class="col-xl-4">
-                        <label for="">State</label>
-                      <input class="inp" style="width: 80%;" type="text" name="state" id="" value="{{account.state}}">
+                        <label for="">State</label><br>
+                        <small id="stateErr" class="text-danger"></small>
+                      <input class="inp" style="width: 80%;" type="text" name="state" id="state" value="{{account.state}}">
                     </div>
                     <div class="col-xl-4">
-                        <label for="">Pin code</label>
-                      <input class="inp" style="width: 63%;"  type="number" name="pincode" id="" value="{{account.pincode}}">
+                        <label for="">Pin code</label><br>
+                        <small id="pincodeErr" class="text-danger"></small>
+                      <input class="inp" style="width: 63%;"  type="number" name="pincode" id="pincode" value="{{account.pincode}}">
                     </div>
 
                 </div>
@@ -252,4 +263,222 @@
     function changeColor(){
         console.log('hi')
     }
+</script>
+
+<script>
+    document.getElementById("profileSubmitForm").addEventListener('submit',(e)=>{
+  
+
+        //variables
+
+        let firstname = document.getElementById("firstname").value;
+        let lastname = document.getElementById("lastname").value;
+        let username = document.getElementById("username").value;
+        let email = document.getElementById("email").value;
+        let secondaryphonenumber = document.getElementById("secondaryphonenumber").value;
+        let phonenumber = document.getElementById("phonenumber").value;
+        let country = document.getElementById("country").value;
+        let state = document.getElementById("state").value;
+        let pincode = document.getElementById("pincode").value;
+        //errors
+          let firstnameErr = document.getElementById("firstnameErr");
+        
+        firstnameErr.innerHTML='asdfasdasdf'
+        let lastnameErr = document.getElementById("lastnameErr");
+        let usernameErr = document.getElementById("usernameErr");
+        let emailErr = document.getElementById("emailErr");
+        let secondaryphonenumberErr = document.getElementById("secondaryphonenumberErr");
+        let phonenumberErr = document.getElementById("phonenumberErr");
+        let countryErr = document.getElementById("countryErr");
+        let stateErr = document.getElementById("stateErr");
+        let pincodeErr= document.getElementById("pincodeErr");
+
+        //functions 
+        function firstnameError(msg){
+            e.preventDefault()
+            firstnameErr.innerHTML=msg;
+        }
+        function lastnameError(msg){
+            e.preventDefault()
+            lastnameErr.innerHTML=msg
+        }
+        function usernameError(msg){
+            e.preventDefault()
+            usernameErr.innerHTML=msg
+        }
+        function emailError(msg){
+            e.preventDefault()
+            emailErr.innerHTML=msg
+        }
+        function secondaryphonenumberError(msg){
+            e.preventDefault()
+            secondaryphonenumberErr.innerHTML=msg
+        }
+        function phonenumberError(msg){
+            e.preventDefault()
+            phonenumberErr.innerHTML=msg
+        }
+        function countryError(msg){
+            e.preventDefault()
+            countryErr.innerHTML=msg
+        }
+        function stateError(msg){
+            e.preventDefault()
+            stateErr.innerHTML=msg
+        }
+        function pincodeError(msg){
+            e.preventDefault()
+            pincodeErr.innerHTML=msg
+        }
+        //conditions
+//firstname
+   if(firstname==''){
+ firstnameError('Required')
+
+}
+else if(/^\s*$/.test(firstname)){
+  firstnameError("Invalid Value")
+}
+
+else if(firstname.length>10){
+ firstnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(firstname)){
+  firstnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(firstname)){
+  firstnameError('Number not allowed')
+}
+else{
+  firstnameErr.innerHTML=''
+}
+///////////////////////////////////////
+
+//lastname
+if(lastname==''){
+ lastnameError('Required')
+
+}
+else if(/^\s*$/.test(lastname)){
+  lastnameError("Invalid Value")
+}
+
+else if(lastname.length>10){
+ lastnameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(lastname)){
+  lastnameError('Special character not allowed')
+}
+else if(/[0-9]/.test(lastname)){
+  lastnameError('Number not allowed')
+}
+else{
+  lastnameErr.innerHTML=''
+}
+//username
+
+if(username==''){
+ usernameError('Required')
+
+}
+else if(/^\s*$/.test(username)){
+  usernameError("Invalid Value")
+}
+
+else if(username.length>10){
+ usernameError('Maximum limit exceeded')
+}
+else if(/[^a-zA-Z0-9\s]/.test(username)){
+  usernameError('Special character not allowed')
+}
+else if(/[0-9]/.test(username)){
+  usernameError('Number not allowed')
+}
+else{
+  usernameErr.innerHTML=''
+}
+
+
+//email 
+
+if(email==''){
+    emailError('Required')
+}
+else if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)==false){
+  emailError('Enter a valid email Address')
+}
+else{
+    emailErr.innerHTML=''
+}
+
+//secondary phonenumber
+
+if(secondaryphonenumber==''){
+    secondaryphonenumberError('Required')
+}
+else if(/^\+?[1-9][0-9]{7,14}$/.test(secondaryphonenumber)==false){
+  secondaryphonenumberError('Invalid value')
+}
+else if(/^(\+?\d{1,4}[\s-]?)?\(?\d{1,}\)?[\s.-]?\d{1,}[\s.-]?\d{1,}$/.test(secondaryphonenumber)==false){
+  secondaryphonenumberError('Invalid value')
+}
+else if(secondaryphonenumber.length!==10){
+    secondaryphonenumberError('Length Must be 10 digit')
+}
+else{
+    secondaryphonenumberErr.innerHTML=''
+}
+
+//phonenumber
+if(phonenumber==''){
+    phonenumberError('Required')
+}
+else if(/^\+?[1-9][0-9]{7,14}$/.test(phonenumber)==false){
+  phonenumberError('Invalid value')
+}
+else if(/^(\+?\d{1,4}[\s-]?)?\(?\d{1,}\)?[\s.-]?\d{1,}[\s.-]?\d{1,}$/.test(phonenumber)==false){
+  phonenumberError('Invalid value')
+}
+else if(phonenumber.length!==10){
+    phonenumberError('Length Must be 10 digit')
+}
+else{
+    phonenumberErr.innerHTML=''
+}
+//country
+if(country==''){
+    countryError('Required')
+}
+else if(/[^a-zA-Z0-9\s]/.test(country)){
+  countryError('Special character not allowed')
+}
+else if(/^\s*$/.test(country)){
+  countryError("Invalid Value")
+}
+
+
+
+  
+else{
+    countryErr.innerHTML=''
+}
+//state
+if(state==''){
+    stateError('Required')
+}
+else if(/[^a-zA-Z0-9\s]/.test(state)){
+  stateError('Special character not allowed')
+}
+else{
+    stateErr.innerHTML=''
+}
+//pincode
+if(pincode==''){
+    pincodeError('Required')
+}
+else{
+    pincodeErr.innerHTML=''
+}
+
+    })
 </script>

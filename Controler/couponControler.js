@@ -100,7 +100,7 @@ const adminDeleteCoupon = asyncHandler(async (req, res) => {
 const restrictCoupon = asyncHandler(async (req, res) => {
      try{
 
-          console.log(req.query.couponId, req.query.userId);
+          
           await couponCollection.updateOne(
                { _id: req.query.couponId },
                {

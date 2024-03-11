@@ -111,7 +111,7 @@
                 
                 <span id="coup">{{this.couponcode}}</span>
                 <span>{{this.discount}}% discount</span>
-             
+                
              
 
                 <button id="{{this._id}}" class="btn" onclick="applyCoupon('{{this._id}}','{{this.couponcode}}','{{this.discount}}')" style="background-color: white;color: red;border: 1px solid red;margin: 10px 0px 10px 0px;">Apply</button>
@@ -321,9 +321,11 @@
                    <input value="online" onclick="changePayment()" type="radio" style="margin-left: 20px;height:25px;width: 25px;" name="payment" id="onlinepayment" >
                    <label for="" style="margin-left: 10px;">Online Payments</label>
                
-            
-                   <input value="creditcard" onclick="changePayment()" type="radio" style="margin-left: 20px;height:25px;width: 25px;" name="payment" id="creditcard">
-                   <label for="" style="margin-left: 10px;">CreditCard</label>
+                    <div id="giftcartwallet">
+
+                   <input value="wallet" onclick="changePayment()" type="radio" style="margin-left: 20px;height:25px;width: 25px;" name="payment" id="creditcard">
+                   <label for="" style="margin-left: 10px;">Giftcard Wallet</label>
+                    </div>
                 
                
             
@@ -392,7 +394,7 @@
 
 
 <script>
-     fetch('https://digityx.shop/cart/cartcount').then((res)=>{
+     fetch('http://localhost:3000/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             {{!-- document.getElementById("items").innerHTML = data.count ; --}}
@@ -403,8 +405,14 @@
                           let delivery =Math.floor(Math.random()*100);
   document.getElementById("deliveryCharge").innerHTML =delivery
             document.getElementById("total").innerHTML = data.totalPrice+delivery;
+
             document.getElementById('t').value = data.totalPrice+delivery
             document.getElementById("del").value = delivery
+
+           let walletTotal={{{walletTotal}}}
+            if(walletTotal<(data.totalPrice+delivery)){
+            document.getElementById('giftcartwallet').style.display='none'
+           }
             if(data.totalPrice<2000){
 
               document.getElementById("cashOnDelivery").style.display='none'
@@ -450,7 +458,7 @@ if(onlinepayment){
 
 function change(e){
  const value = document.getElementById("add").value
-  fetch(`https://digityx.shop/cart/checkout-change-address?type=${value}`).then((res)=>{
+  fetch(`http://localhost:3000/cart/checkout-change-address?type=${value}`).then((res)=>{
     return res.json()
   }).then((data)=>{
     location.reload()
@@ -472,10 +480,11 @@ function change(e){
 
     var userId = document.querySelector(".userId").innerHTML;
     const total = document.getElementById("total").innerHTML;
+    const delivery = document.getElementById("deliveryCharge").innerHTML;
   
 
     var dis = (total*discount)/100;
-    var discountPrice = Math.floor(dis)
+    var discountPrice = Math.floor(dis)+parseInt(delivery)
     console.log(couponId,userId,couponCode,discount);
 document.getElementById('t').value=parseInt(total)-parseInt( discountPrice)
 document.getElementById("offer").innerHTML=parseInt(document.getElementById("offer").innerHTML)+parseInt(discountPrice)
@@ -488,7 +497,7 @@ document.getElementById("coupon").value=discountPrice
           document.getElementById(`${couponId}`).style.display='none'
        
          
-      fetch(`https://digityx.shop/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`)
+      {{!-- fetch(`http://localhost:3000/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`) --}}
   
     
     
@@ -572,6 +581,9 @@ document.getElementById("coupon").value=discountPrice
      if(firstName==''){
       firstNameError('Required');
      }
+     else if(/^\s+$/.test(firstName)){
+  firstNameError("Enter a valid Name")
+}
      else if(/[^a-zA-Z0-9\s]/.test(firstName)){
           firstNameError("Special Character not allowed")
      }
@@ -587,6 +599,9 @@ document.getElementById("coupon").value=discountPrice
 //lastname
 if(lastName==''){
   lastNameError('Required')
+}
+     else if(/^\s+$/.test(lastName)){
+  lastNameError("Enter a valid LastName")
 }
  else if(/[^a-zA-Z0-9\s]/.test(lastName)){
           lastNameError("Special Character not allowed")
@@ -623,6 +638,9 @@ if(lastName==''){
    else if(phonenumber.length!=10){
     phoneNumberError('Must be 10 Digit')
    }
+   else if(/^0+$/.test(phonenumber)){
+  phoneNumberError("Only contains zero")
+}
    else{
     phoneNumberErr.innerHTML=''
    }
@@ -649,7 +667,7 @@ if(lastName==''){
 
   if(error==false){
 
-      fetch('https://digityx.shop/profile/updateAddress',{
+      fetch('http://localhost:3000/profile/updateAddress',{
       method:'POST',
       headers:{
       'Content-Type':'application/json'
@@ -702,7 +720,7 @@ Swal.fire(`${data.error}`);
  var user =document.querySelector(".userId").innerHTML;
  console.log(user)
 
- fetch(`https://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
+ fetch(`http://localhost:3000/cart/address-exists?id=${user}`).then((data)=>{
   return data.json()
  })
 .then((res)=>{
@@ -733,7 +751,7 @@ Swal.fire(`${data.error}`);
       const total = document.getElementById("total").innerHTML;
       console.log(total)
     const id   = document.getElementById("referalcode").value;
-     fetch(`https://digityx.shop/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
+     fetch(`http://localhost:3000/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
       return result.json()
      }).then((data)=>{
       console.log(data)
@@ -749,7 +767,7 @@ Swal.fire(`${data.error}`);
 <script>
   function changeAddress(id){
     document.getElementById("chooseAddress").value=id
-    fetch(`https://digityx.shop/profile/changeAddress?id=${id}`)
+    fetch(`http://localhost:3000/profile/changeAddress?id=${id}`)
   }
 </script>
 
@@ -759,7 +777,7 @@ Swal.fire(`${data.error}`);
     e.preventDefault()
 
 
-    fetch('https://digityx.shop/cart/checkCheckout').then((result)=>{
+    fetch('http://localhost:3000/cart/checkCheckout').then((result)=>{
       return result.json()
     }).then((data)=>{
     
@@ -781,7 +799,7 @@ Swal.fire(`${data.error}`);
   if (result.isConfirmed) {
 //deleting cart
 
-fetch('https://digityx.shop/cart/updateCart').then(()=>{
+fetch('http://localhost:3000/cart/updateCart').then(()=>{
   Swal.fire({
   position: "top",
   icon: "success",
@@ -804,6 +822,13 @@ setTimeout(()=>{
 
    
   }
+</script>
+
+<script>
+  let total = document.getElementById("total").innerHTML;
+ 
+  let walle =  {{{walletTotal}}}
+  console.log(walle)
 </script>
 
 

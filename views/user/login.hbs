@@ -248,7 +248,7 @@ let email = document.getElementById('email').value;
 let password = document.getElementById("password").value
 console.log(email,password)
 
-fetch(`https://digityx.shop/userLogin?email=${email}&&password=${password}`).then((result)=>{
+fetch(`http://localhost:3000/userLogin?email=${email}&&password=${password}`).then((result)=>{
   return result.json()
 }).then((result)=>{
     if(result.success==true){
@@ -259,7 +259,7 @@ fetch(`https://digityx.shop/userLogin?email=${email}&&password=${password}`).the
   showConfirmButton: false,
   timer: 1500
 });
-setTimeout(()=>{location.href = 'http://digityx.shop/user_home'},1500)
+setTimeout(()=>{location.href = 'http://localhost:3000/user_home'},1500)
      
     }
     else{

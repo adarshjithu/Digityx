@@ -243,6 +243,10 @@ const adminAddReferalOffer = asyncHandler(async (req, res) => {
 // ----------------offer to wallet-----------------------------------------------
 
 const offerToWallet = asyncHandler(async (req, res) => {
+
+     console.log('referal offer')
+
+     res.json({})
      try {
           const trasactionIdRandom = Math.floor(Math.random() * 10000000);
           const transactionId = "#" + trasactionIdRandom;
@@ -255,6 +259,7 @@ const offerToWallet = asyncHandler(async (req, res) => {
           const walletObj = {
                transactionId: transactionId,
                description: "Referal Offer",
+               status:'Credit',
                amount: total,
                date: new Date().toDateString(),
           };
@@ -287,6 +292,7 @@ const offerToWallet = asyncHandler(async (req, res) => {
                let wallet = {
                     user: req.session.user._id,
                     amount: total,
+                    status:'Credit',
                     transactions: [walletObj],
                };
                await walletCollection.create(wallet);

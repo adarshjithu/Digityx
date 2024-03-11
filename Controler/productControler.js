@@ -458,6 +458,8 @@ const productsFilter = asyncHandler(async (req, res) => {
 //const deleteImage ----------------------------------------------------------------------------
 
 const deleteImage = asyncHandler(async (req, res) => {
+
+     console.log('called',req.query)
    
     console.log(req.query)
      console.log('called')

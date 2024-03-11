@@ -204,6 +204,8 @@ td{
       <th scope="col">Id</th>
       <th scope="col">Description</th>
       <th scope="col">Date</th>
+
+      <th scope="col">Status</th>
       <th scope="col">Amount</th>
       <th scope="col">Action</th>
     </tr>
@@ -216,6 +218,7 @@ td{
       <td >{{this.transactionId}}</td>
       <td id="tds">{{this.description}}</td>
       <td>{{this.date}}</td>
+      <td id="st">{{this.status}}</td>
       <td>&#8377;{{this.amount}}</td>
       <td><button class="btn btn-primary" onclick="removeWallet('{{this.transactionId}}')">Remove</button></td>
     </tr>
@@ -266,6 +269,9 @@ td{
     if(i.innerHTML=='Order Returned'){
       i.style.color='orange'
     }
+    if(i.innerHTML=='Bought Products'){
+      i.style.color='green'
+    }
   }
 </script>
 
@@ -276,6 +282,22 @@ td{
     
    let Id=encodeURIComponent(id)
   
-    fetch(`https://digityx.shop/profile/removeTrans?userId=${Id},`)
+    fetch(`http://localhost:3000/profile/removeTrans?userId=${Id},`)
   }
+
+
+
+</script>
+<script>
+  let status = document.querySelectorAll('#st');
+
+  for(let i of status){
+    if(i.innerHTML =='Debit'){
+      i.style.color='blue'
+    }
+    else{
+       i.style.color='green'
+    }
+  }
+  console.log(status)
 </script>

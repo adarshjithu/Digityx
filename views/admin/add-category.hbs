@@ -316,34 +316,34 @@ margin: 20px;
 
 
 
-<div class="customerBody  row" style="margin-top: 35px;background-color: white;border-radius: 5px;box-shadow: 1px 1px 5px black;">
+<div class="customerBody  row" style="margin-top: 35px;background-color: ;border-radius: 5px;box-shadow: 1px 1px 5px black;">
     <form id="form" class="form" action="/admin/add-category" method="post" enctype="multipart/form-data" >
  
     
 
     <div class="col-md-12 col-lg-4 col-xl-4"col-sm-12 style="margin-top: 25px;">
-        <div class="thumbnail" style="background-color: white; display: flex; flex-direction: column; 
-        justify-content: center;;border-radius: 5px;">
-            <h5 >Image</h5>
+        <div class="thumbnail" style="background-color: ; display: flex; flex-direction: column; 
+        justify-content: center;border-radius: 5px;margin-top: 20%;">
+            
             <img id="image" src="https://www.generationsforpeace.org/wp-content/uploads/2018/03/empty.jpg" alt="" style="width: 200px; height: 200px; margin-left: 18%;">
 
-        <input type="file" name="image" onchange="changeImage(event)">
+        <input type="file" name="image" onchange="changeImage(event)" style="margin-top: 20px;">
         </div>
     </div>
     <div class="col-md-12 col-lg-8 col-xl-8 col-sm-12" style="margin-top: 20px;" >
-        <div class="data" style="display: flex; flex-direction: column; background-color: white;
+        <div class="data" style="display: flex; flex-direction: column; background-color: ;
         border-radius: 5px;justify-content: center;align-items: center; margin-left: 25px" >
         
-            <h5>General Information</h5>
+           
             <label for="" style="margin: 20px 0% 20px 0px;" >Category Name</label>
             <span id="categoryError" class="text-danger"></span>
             {{#if error}}
             <span class="text-danger">Category Already Exists</span>
             {{/if}}
-            <input required id="category" name="category" type="text" style="height: 50px; width: 90%; background-color: white;border: 1px solid grey;border-radius: 5px;">
+            <input  id="category" name="category" type="text" style="height: 50px; width: 90%; background-color: white;border: 1px solid grey;border-radius: 5px;">
             <label for="" style="margin: 20px 0px 20px 0px; ">Description</label>
             <span id="descriptionError" class="text-danger" ></span>
-            <input required id="description" name="description" type="text" style="height: 150px; width: 90%;margin-bottom: 30px;background-color: white;;border: none; border-radius: 5px;border: 1px solid grey;">
+            <input  id="description" name="description" type="text" style="height: 150px; width: 90%;margin-bottom: 30px;background-color: white;;border: none; border-radius: 5px;border: 1px solid grey;">
        
     <button class="btn btn-primary" type="submit"  style="margin-bottom: 20px;color: white;background-color: red;border: none;" >Submit</button>
         </div>
@@ -363,41 +363,77 @@ margin: 20px;
         document.getElementById("image").src=URL.createObjectURL(event.target.files[0])
     }
 
-    const  pattern = /^[a-zA-Z0-9]+$/;
-    const pattern2 = /^[a-zA-Z0-9 ]+$/;
-     const form=document.getElementById("form");
-     const category = document.getElementById("category");
-     const description = document.getElementById("description");
-     const categoryError = document.getElementById("categoryError");
-     const descriptionError = document.getElementById("descriptionError");
-     form.addEventListener('submit',function(e){
+  
 
-      if(pattern.test(category.value)){
 
-      }
-      else{
-            categoryError.innerHTML= 'Name should not allow special charectors';
-            e.preventDefault()
-      }
+     
+     document.getElementById("form").addEventListener('submit',(e)=>{
 
-      if(/\d/.test(category.value)){
-       categoryError.innerHTML='Invalid value'
-      e.preventDefault()
-    }
-    if(category.value.length>12){
-        categoryError.innerHTML='Maximum 12 charectors allowed';
-        e.preventDefault()
+      
+ 
+     const category = document.getElementById("category").value;
+    const categoryErr =  document.getElementById("categoryError")
+     const description = document.getElementById("description").value;
+    const descriptionErr =  document.getElementById("descriptionError")
 
-    }
 
-    if(pattern2.test(description.value)){
+function categoryError(msg){
+  e.preventDefault()
+  categoryErr.innerHTML=msg
+}
 
-    }
-    else{
-       descriptionError.innerHTML= 'description should not allow special charectors';
-            e.preventDefault()
+function descriptionError(msg){
+  e.preventDefault()
+  descriptionErr.innerHTML=msg
+}
 
-    }
+
+   if(category==''){
+    categoryError('Required')
+   }
+   else if(/\d/.test(category)){
+     categoryError('Numbers are not allowed')
+   }
+   else if(/[^a-zA-Z0-9\s]/.test(category)){
+ categoryError('Special charectors not allowed')
+   }
+   else if(category.length<4){
+ categoryError('Min 4 charector required')
+   }
+   else if(category.length>12){
+ categoryError('Maximum length reached')
+   }
+   else if(/^\s+$/.test(category)){
+  categoryError("Only contain Space")
+}
+   else{
+    categoryErr.innerHTML=''
+   }
+
+
+   {{!-- /// --}}
+
+   if(description==''){
+    descriptionError('Required')
+   }
+      else if(/[^a-zA-Z0-9\s]/.test(description)){
+ descriptionError('Special charectors not allowed')
+   }
+    else if(description.length>50){
+ categoryError('Maximum length reached')
+   }
+   else if(description.length<4){
+ descriptionError('Min 4 charector required')
+   }
+
+   else if(/^\s+$/.test(description)){
+  description("Only contain Space")
+}
+   else{
+    descriptionErr.innerHTML='';
+   }
+   
+
 
 
 

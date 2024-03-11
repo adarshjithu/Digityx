@@ -239,7 +239,7 @@ background-color: #eae8e8;
 
 <script>
     function check(){
-  fetch(`https://digityx.shop/cart/checkCheckout`).then((data)=>{
+  fetch(`http://localhost:3000/cart/checkCheckout`).then((data)=>{
     return data.json()
   }).then(async (result)=>{
       if(result.success==false){
@@ -275,7 +275,7 @@ background-color: #eae8e8;
 }
 let choice = await confirmDelete();
 if(choice==true){
-fetch(`https://digityx.shop/cart/updateCart`).then(()=>{
+fetch(`http://localhost:3000/cart/updateCart`).then(()=>{
   location.reload()
 })
 }
@@ -314,8 +314,8 @@ fetch(`https://digityx.shop/cart/updateCart`).then(()=>{
        else{
          document.getElementById(`btn${proId}`).classList.remove("changeColor")
 
-      await fetch(`https://digityx.shop/cart/changeQuantity?proId=${proId}&&count=${count}`).then(function(data){
-        fetch('https://digityx.shop/cart/cartcount').then((res)=>{
+      await fetch(`http://localhost:3000/cart/changeQuantity?proId=${proId}&&count=${count}`).then(function(data){
+        fetch('http://localhost:3000/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
       
@@ -359,7 +359,7 @@ fetch(`https://digityx.shop/cart/updateCart`).then(()=>{
 
 
 
- fetch('https://digityx.shop/cart/cartcount').then((res)=>{
+ fetch('http://localhost:3000/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
         
@@ -404,5 +404,9 @@ async function confirmDelete() {
 
 
 }
+
+</script>
+
+<script>
 
 </script>

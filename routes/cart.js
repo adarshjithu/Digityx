@@ -18,6 +18,7 @@ const {
      singleProduct,
      checkCheckout,
      updateCart,
+     buyNow,
 } = require("../Controler/cartControler");
 const cartCollection = require("../models/cartModel");
 
@@ -37,6 +38,7 @@ app.get("/address-exists", addressExistsControler);
 app.get("/buy-now", singleProduct);
 app.get("/checkCheckout",checkCheckout);
 app.get("/updateCart",updateCart);
+app.get("/buyNow",buyNow)
 // app.get("")
 
 module.exports = app;

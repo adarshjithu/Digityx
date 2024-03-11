@@ -76,7 +76,7 @@ const homeControler = asyncHandler(async (req, res, next) => {
           const category = await categoryCollection.find({}).lean();
           products = await productCollection.aggregate([{$match:{
                category:'Mobile'
-          }},{$addFields:{date:'$addedAt'}},{$sort:{date:-1}},{$limit:5}])
+          }},{$addFields:{date:'$addedAt'}},{$sort:{date:-1}},{$limit:6}])
           let laptop= await productCollection.aggregate([{$match:{category:'Laptop'}},{
                $addFields:{
                     date:'$addedAt'
@@ -86,7 +86,7 @@ const homeControler = asyncHandler(async (req, res, next) => {
                $sort:{
                     date:-1
                }
-          },{$limit:5
+          },{$limit:6
           }])
           let cartCount = await cartCollection.findOne({ user: req.session.user._id });
           let newArr = await productCollection.aggregate([{$match:{
@@ -120,7 +120,7 @@ const homeControler = asyncHandler(async (req, res, next) => {
                USER = "";
           }
 
-          res.render("user/home", { home: true, user: USER, category, products, count: count,banner,laptop ,newArrival});
+          res.render("user/homes", { home: true, user: USER, category, products, count: count,banner,laptop ,newArrival});
      } catch (error) {
           console.log(error.message);
           res.status(500);
