@@ -742,7 +742,7 @@ Swal.fire({
   confirmButtonText: "Yes, delete it!"
 }).then((result) => {
   if (result.isConfirmed) {
- fetch(`http://localhost:3000/products/deleteImage?image=${image}&&type=${type}&&proId=${proId}`).then((data)=>{
+ fetch(`https://digityx.shop/products/deleteImage?image=${image}&&type=${type}&&proId=${proId}`).then((data)=>{
    return data.json()
   }).then((result)=>{
     

@@ -394,7 +394,7 @@
 
 
 <script>
-     fetch('http://localhost:3000/cart/cartcount').then((res)=>{
+     fetch('https://digityx.shop/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             {{!-- document.getElementById("items").innerHTML = data.count ; --}}
@@ -458,7 +458,7 @@ if(onlinepayment){
 
 function change(e){
  const value = document.getElementById("add").value
-  fetch(`http://localhost:3000/cart/checkout-change-address?type=${value}`).then((res)=>{
+  fetch(`https://digityx.shop/cart/checkout-change-address?type=${value}`).then((res)=>{
     return res.json()
   }).then((data)=>{
     location.reload()
@@ -497,7 +497,7 @@ document.getElementById("coupon").value=discountPrice
           document.getElementById(`${couponId}`).style.display='none'
        
          
-      {{!-- fetch(`http://localhost:3000/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`) --}}
+      {{!-- fetch(`https://digityx.shop/coupon/restrict-coupon?couponId=${couponId}&&userId=${userId}`) --}}
   
     
     
@@ -667,7 +667,7 @@ if(lastName==''){
 
   if(error==false){
 
-      fetch('http://localhost:3000/profile/updateAddress',{
+      fetch('https://digityx.shop/profile/updateAddress',{
       method:'POST',
       headers:{
       'Content-Type':'application/json'
@@ -720,7 +720,7 @@ Swal.fire(`${data.error}`);
  var user =document.querySelector(".userId").innerHTML;
  console.log(user)
 
- fetch(`http://localhost:3000/cart/address-exists?id=${user}`).then((data)=>{
+ fetch(`https://digityx.shop/cart/address-exists?id=${user}`).then((data)=>{
   return data.json()
  })
 .then((res)=>{
@@ -751,7 +751,7 @@ Swal.fire(`${data.error}`);
       const total = document.getElementById("total").innerHTML;
       console.log(total)
     const id   = document.getElementById("referalcode").value;
-     fetch(`http://localhost:3000/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
+     fetch(`https://digityx.shop/offer/applyReferal?id=${id}&&total=${total}`).then((result)=>{
       return result.json()
      }).then((data)=>{
       console.log(data)
@@ -767,7 +767,7 @@ Swal.fire(`${data.error}`);
 <script>
   function changeAddress(id){
     document.getElementById("chooseAddress").value=id
-    fetch(`http://localhost:3000/profile/changeAddress?id=${id}`)
+    fetch(`https://digityx.shop/profile/changeAddress?id=${id}`)
   }
 </script>
 
@@ -777,7 +777,7 @@ Swal.fire(`${data.error}`);
     e.preventDefault()
 
 
-    fetch('http://localhost:3000/cart/checkCheckout').then((result)=>{
+    fetch('https://digityx.shop/cart/checkCheckout').then((result)=>{
       return result.json()
     }).then((data)=>{
     
@@ -799,7 +799,7 @@ Swal.fire(`${data.error}`);
   if (result.isConfirmed) {
 //deleting cart
 
-fetch('http://localhost:3000/cart/updateCart').then(()=>{
+fetch('https://digityx.shop/cart/updateCart').then(()=>{
   Swal.fire({
   position: "top",
   icon: "success",

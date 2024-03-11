@@ -780,7 +780,7 @@ wipePrevBtn.addEventListener("click", (e) => {
   let user = 123;
    
  
-  await fetch(`http://localhost:3000/cart/addtocart?userId=${user}&&proId=${name}`).then(function(res){
+  await fetch(`https://digityx.shop/addtocart?userId=${user}&&proId=${name}`).then(function(res){
      return res.json()
   }).then((data)=>{
    if(data.success==false){

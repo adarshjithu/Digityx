@@ -537,7 +537,7 @@ div, h1, h2, h3, h4, span, p, input, form, img, hr, img, a {
         
        {{!-- alert(`You Invited Your Friend ${email}`) --}}
 
-        fetch(`http://localhost:3000/offer/referalbonus?email=${email}&&name=${name}`).then((data)=>{
+        fetch(`https://digityx.shop/offer/referalbonus?email=${email}&&name=${name}`).then((data)=>{
             return data.json()
         }).then((result)=>{
             console.log(result)
@@ -551,7 +551,7 @@ div, h1, h2, h3, h4, span, p, input, form, img, hr, img, a {
 
     <script>
         function createCode(){
-              fetch(`http://localhost:3000/offer/createReferal`).then((data)=>{
+              fetch(`https://digityx.shop/offer/createReferal`).then((data)=>{
                    return data.json()
               }).then((data)=>{
                 location.reload()
@@ -581,7 +581,7 @@ div, h1, h2, h3, h4, span, p, input, form, img, hr, img, a {
       const id = document.getElementById("referalcode").value
       console.log(email,total,id)
 
-      fetch(`http://localhost:3000/offer/toWallet?id=${id}&&email=${email}&&total=${total}`).then(()=>{
+      fetch(`https://digityx.shop/offer/toWallet?id=${id}&&email=${email}&&total=${total}`).then(()=>{
         location.reload()
       })
       

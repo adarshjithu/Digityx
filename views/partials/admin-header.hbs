@@ -48,7 +48,7 @@
          </header>
 
          <script>
-         fetch('http://localhost:3000/cart/cartcount').then((res)=>{
+         fetch('https://digityx.shop:3000/cart/cartcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             
@@ -61,7 +61,7 @@
          })
 
 
-         fetch('http://localhost:3000/profile/profile-icon').then((res)=>{
+         fetch('https://digityx.shop/profile/profile-icon').then((res)=>{
             return res.json()
          }).then((data)=>{
           
@@ -71,7 +71,7 @@
 
            //wishlist
 
-               fetch('http://localhost:3000/products/wishlistcount').then((res)=>{
+               fetch('https://digityx.shop/products/wishlistcount').then((res)=>{
             return res.json()
          }).then((data)=>{
             console.log(data)

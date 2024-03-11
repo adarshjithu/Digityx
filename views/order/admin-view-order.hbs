@@ -558,7 +558,7 @@ td{
  function changeOrderStatus(id,status){
   console.log(id,status.value)
 
-  fetch(`http://localhost:3000/order/change-order-status?id=${id}&&status=${status.value}`).then((result)=>{
+  fetch(`https://digityx.shop/order/change-order-status?id=${id}&&status=${status.value}`).then((result)=>{
   return result.json()
   }).then((data)=>{
     if(data.success==true){
