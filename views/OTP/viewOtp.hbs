@@ -86,7 +86,7 @@ function resendOtp(){
      let timer = document.getElementById('timer').innerHTML;
      if(timer<=0){
         
-fetch(`https://digityx.shop:3000/user/otp/resend?position=${position}`).then((data)=>{
+fetch(`https://digityx.shop/user/otp/resend?position=${position}`).then((data)=>{
     return data.json()
 }).then((result)=>{
     location.reload()
