@@ -30,6 +30,8 @@ app.post("/edit-category-image",upload.single('image'),editCategoryImage);
 app.get("/check",(req,res)=>{
     res.render("admin/index") 
 })
+
+///hello this is for nginx
 app.get("/transaction",transaction)
 
 app.get('/category-chart',categoryChartControler);
